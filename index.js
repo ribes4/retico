@@ -1,5 +1,8 @@
 var express = require('express');
 var app = express();
+var http = require('http');
+
+app.set('port', process.env.PORT || 3000);
 
 
 app.use(express.static('public'));
@@ -7,10 +10,6 @@ app.get('/', function (req, res) {
    res.sendFile( __dirname + "/" + "index.html" );
 })
 
-var server = app.listen(8081, function () {
-   var host = server.address().address
-   var port = server.address().port
-   
-   console.log("Example app listening at http://%s:%s", host, port)
-
-})
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
