@@ -7,4 +7,4 @@ function enterKey(event){
 	    		document.getElementById("text2").innerHTML = document.getElementById("inputButton").value;
 			return false;	
 		}
-	}
+	};
