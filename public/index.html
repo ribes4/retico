@@ -4,25 +4,12 @@
 
 <meta charset="UTF-8">
 
-<script>
-	function myFunction() {
-	    document.getElementById("text2").innerHTML = document.getElementById("input").value;
-	}
-</script>
-<script>
-	function enterKey(e){
-   		if (e.keyCode == 13) {
-	    		document.getElementById("text2").innerHTML = document.getElementById("input").value;
-			return false;	
-		}
-	}
-</script>
 </head>
 <body>
 
 <h1>Express + JavaScript</h1>
 
-<input id="input" type="text" onkeypress="return enterKey(event)" ><button onclick="myFunction()">Enviar</button>
+<input id="inputButton" type="text" onkeypress="return enterKey(event)" ><button onclick="myFunction()">Enviar</button>
 
 <br><br>
 <table width="280" cellspacing="1" cellpadding="3" border="0" bgcolor="#1E679A"> 
@@ -43,4 +30,16 @@
 
 
 </body>
+
+
+<script src="script.js"</script>
+<script>
+	function enterKey(e){
+   		if (e.keyCode == 13) {
+	    		document.getElementById("text2").innerHTML = document.getElementById("input").value;
+			return false;	
+		}
+	}
+</script>
+
 </html>
