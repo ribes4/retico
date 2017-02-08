@@ -15,6 +15,10 @@ app.get('/chat', function (req, res) {
    res.sendFile( __dirname + "/public/" + "chat.html" );
 });
 
+app.get('/prepartida', function (req, res) {
+   res.sendFile( __dirname + "/" + "prepartida.html" );
+})
+
 io.on('connection', function(socket){
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
