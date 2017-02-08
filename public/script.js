@@ -1,31 +1,20 @@
-var teamA = [];
-var teamB = [];
-var id = 1;
+var socket = io();
 var idJugador=0;
 
-function myFunction() {
-	//document.getElementById("text2").innerHTML = document.getElementById("inputButton").value;
-	var player = [id, document.getElementById("nickname").value];
-	idJugador = player[0];
-	id++;
-
-	if(teamA.length > teamB.length){
-		teamB.push(player);
-	}
-	else if(teamB.length > teamA.length){
-		teamA.push(player);
-	}
-	else{
-		var rnd = Math.floor((Math.random() * 2) + 1);
-		if(rnd == 1){
-			teamA.push(player);
-		}
-		else{
-			teamB.push(player);
-		}
-	}
-	
+function play() {
+	socket.emit('nickname',document.getElementById("nickname").value)
 	document.getElementById("nickname").value="";
 	location.href="/chat";
-	
 };
+
+socket.on('id', function(id){
+	idJugador = id;
+});
+
+
+
+/*socket.on('teamA', function(teamA){
+	for(int i=0;i<teamA.length;i++){
+		
+	}
+});*/
