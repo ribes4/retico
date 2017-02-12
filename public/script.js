@@ -1,6 +1,13 @@
 var socket = io();
 var idJugador=0;
 
+function enterKey(event){
+   		if (event.keyCode == 13) {
+	    		play();
+			return false;	
+		}
+	};
+
 function play() {
 	socket.emit('nickname',document.getElementById("nickname").value)
 	document.getElementById("nickname").value="";
