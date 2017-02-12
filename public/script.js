@@ -9,12 +9,5 @@ function play() {
 
 socket.on('id', function(id){
 	idJugador = id;
+	alert("La teva id: "+idJugador);
 });
-
-
-
-/*socket.on('teamA', function(teamA){
-	for(int i=0;i<teamA.length;i++){
-		
-	}
-});*/

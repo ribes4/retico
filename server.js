@@ -35,25 +35,40 @@ io.on('connection', function(socket){
 		
 		if(teamA.length > teamB.length){
 			teamB.push(player);
-			console.log(nickname+" afegit a taula B");
+			mostrar();
 		}
 		else if(teamB.length > teamA.length){
 			teamA.push(player);
-			console.log(nickname+" afegit a taula A");
+			mostrar();
 		}
 		else{
 			var rnd = Math.floor((Math.random() * 2) + 1);
 			if(rnd == 1){
 				teamA.push(player);
-				console.log(nickname+" afegit a taula A");
+				mostrar();
 			}
 			else{
 				teamB.push(player);
-				console.log(nickname+" afegit a taula B");
+				mostrar();
 			}
 		}
 	});
 });
+
+function mostrar(){
+
+	console.log("\n\n\n\n\nEQUIP A:");
+	for(var i=0;i<teamA.length;i++){
+		var jugador = teamA[i];
+		console.log(jugador[0]+": "+jugador[1]);
+	}
+	
+	console.log("\nEQUIP B:");
+	for(var j=0;j<teamB.length;j++){
+		var jugador2 = teamB[j];
+		console.log(jugador2[0]+": "+jugador2[1]);
+	}
+}
 
 http.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
