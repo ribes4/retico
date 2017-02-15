@@ -16,16 +16,17 @@ app.get('/', function (req, res) {
 });
 
 app.get('/chat', function (req, res) {
-	res.sendFile( __dirname + "/public/" + "chat.html" );
+	res.sendFile( __dirname + "/public" + "/chat.html" );
 });
 
 app.get('/prepartida', function (req, res) {
-	res.sendFile( __dirname + "/public/" + "prepartida.html" );
+	res.sendFile( __dirname + "/public" + "/prepartida.html" );
 })
 
 io.on('connection', function(socket){
 	socket.on('chat message', function(msg){
 		io.emit('chat message', msg);
+		
 	});
 	socket.on('nickname', function(nickname){
 		
@@ -52,6 +53,10 @@ io.on('connection', function(socket){
 				mostrar();
 			}
 		}
+	});
+	socket.on("init_pose", function(data){
+		io.emit("pose",data);
+
 	});
 });
 

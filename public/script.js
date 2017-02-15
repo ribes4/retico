@@ -18,3 +18,8 @@ socket.on('id', function(id){
 	idJugador = id;
 	alert("La teva id: "+idJugador);
 });
+
+socket.on('pose',function(data){
+	 $("#plataforma").append(data);
+});
+
