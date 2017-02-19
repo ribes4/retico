@@ -56,7 +56,10 @@ io.on('connection', function(socket){
 	});
 	socket.on("init_pose", function(data){
 		io.emit("pose",data);
-
+	});
+	
+	socket.on("moure", function(data){
+		io.emit("movent",data);
 	});
 });
 

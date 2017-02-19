@@ -1,5 +1,6 @@
 var socket = io();
-var idJugador=0;
+
+
 
 function enterKey(event){
    		if (event.keyCode == 13) {
@@ -15,11 +16,118 @@ function play() {
 };
 
 socket.on('id', function(id){
-	idJugador = id;
-	alert("La teva id: "+idJugador);
+	sessionStorage.setItem('idJugador', id)
+	alert("La teva id: "+id);
 });
 
 socket.on('pose',function(data){
-	 $("#plataforma").append(data);
+	 $("#plataforma").append(data.jugadorPrincipal);
 });
 
+socket.on("movent",function(data){
+	
+	var move={
+		left: data.style.left,
+		top: data.style.top
+	}
+	//$("#"+data.jugadorPrincipal).css(move);
+	$("#"+ data.id).css(move);
+});
+
+	  /*$('form').submit(function(){
+		socket.emit('chat message', $('#m').val());
+		$('#m').val('');
+		return false;
+	  });
+	  socket.on('chat message', function(msg){
+		//$('#messages').append($('<li>').text(msg));
+	  });
+	  
+	  //per capturar quina tecla es prem
+	  $( "#m" ).keydown(function() {
+		var event = window.event ? window.event : e;
+		console.log(event.keyCode)
+	  });*/
+	  
+		
+
+function leftArrowPressed() {
+	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
+	element.style.left = parseInt(element.style.left) - 1 + '%';
+	var jugador={
+		id: sessionStorage.getItem('idJugador'),
+		style: element.style
+	}
+	socket.emit("moure",jugador);
+
+}
+
+function rightArrowPressed() {
+	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
+	element.style.left = parseInt(element.style.left) + 1 + '%';
+	var jugador={
+		id: sessionStorage.getItem('idJugador'),
+		style: element.style
+	}
+	socket.emit("moure",jugador);
+
+}
+
+function upArrowPressed() {
+	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
+	element.style.top = parseInt(element.style.top) - 1 + '%';
+	var jugador={
+		id: sessionStorage.getItem('idJugador'),
+		style: element.style
+	}
+	socket.emit("moure",jugador);
+
+}
+
+function downArrowPressed() {
+	var element = document.getElementById(sessionStorage.getItem('idJugador'));
+	element.style.top = parseInt(element.style.top) + 1 + '%';
+	var jugador={
+		id: sessionStorage.getItem('idJugador'),
+		style: element.style
+	}
+	socket.emit("moure",jugador);
+
+}
+
+function moveSelection(evt) {
+	var event = window.event ? window.event : e;
+	console.log(event.keyCode)
+	console.log(sessionStorage.getItem('idJugador'))
+	switch (evt.keyCode) {
+		case 37:
+			leftArrowPressed();
+			break;
+		case 39:
+			rightArrowPressed();
+			break;
+		case 38:
+			upArrowPressed();
+			break;
+		case 40:
+			downArrowPressed();
+			break;
+	}
+	
+};
+
+function docReady()
+{
+	//var aleatori = Math.floor(Math.random()*5)+1;
+	/*var posBol={
+		left:Math.floor(Math.random() *2000)+1,
+		top:Math.floor(Math.random()*900) +1,
+	}*/
+	var obj={
+		jugadorPrincipal: "<div id="+sessionStorage.getItem('idJugador')+" class='player' type= 'player' name='player' style =' background-color:#f220e6;position:absolute;left:50%; top:50%'>"+sessionStorage.getItem('idJugador')+"</div>"
+	}
+	
+	socket.emit("init_pose",obj);
+	
+	window.addEventListener('keydown', moveSelection);
+}
