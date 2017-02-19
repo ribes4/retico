@@ -21,7 +21,17 @@ socket.on('id', function(id){
 });
 
 socket.on('pose',function(data){
-	 $("#plataforma").append(data.jugadorPrincipal);
+	for (i=0;i< data.length;i++){
+		var element = document.getElementById(data[i].id);
+		console.log(element)
+		if(!element){
+			$("#plataforma").append(data[i].jugadorPrincipal);
+		}
+		else{
+			element = data[i].jugadorPrincipal;
+	
+		}
+	}
 });
 
 socket.on("movent",function(data){
@@ -124,6 +134,7 @@ function docReady()
 		top:Math.floor(Math.random()*900) +1,
 	}*/
 	var obj={
+		id: sessionStorage.getItem('idJugador'),
 		jugadorPrincipal: "<div id="+sessionStorage.getItem('idJugador')+" class='player' type= 'player' name='player' style =' background-color:#f220e6;position:absolute;left:50%; top:50%'>"+sessionStorage.getItem('idJugador')+"</div>"
 	}
 	

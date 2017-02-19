@@ -5,6 +5,7 @@ var io = require('socket.io')(http);
 
 var teamA=[];
 var teamB=[];
+var poses=[];
 var id=1;
 
 app.set('port', process.env.PORT || 3000);
@@ -55,10 +56,16 @@ io.on('connection', function(socket){
 		}
 	});
 	socket.on("init_pose", function(data){
-		io.emit("pose",data);
+		poses.push(data);
+		io.emit("pose",poses);
 	});
 	
 	socket.on("moure", function(data){
+		for( i=0;i< poses.length;i++){
+			if(poses[i].id==data.id){
+				poses[i].jugadorPrincipal = "<div id="+data.id+" class='player' type= 'player' name='player' style =' background-color:#f220e6;position:absolute;left:"+data.style.left+"; top:"+data.style.top+"'>"+data.id+"</div>"				
+			}
+		}
 		io.emit("movent",data);
 	});
 });
