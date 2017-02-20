@@ -63,10 +63,11 @@ socket.on("movent",function(data){
 
 function leftArrowPressed() {
 	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
-	element.style.left = parseInt(element.style.left) - 1 + '%';
+	var elementclone =element.cloneNode(true);
+	elementclone.style.left = parseInt(element.style.left) - 1 + '%';
 	var jugador={
 		id: sessionStorage.getItem('idJugador'),
-		style: element.style
+		style: elementclone.style
 	}
 	socket.emit("moure",jugador);
 
@@ -74,10 +75,11 @@ function leftArrowPressed() {
 
 function rightArrowPressed() {
 	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
-	element.style.left = parseInt(element.style.left) + 1 + '%';
+	var elementclone =element.cloneNode(true);
+	elementclone.style.left = parseInt(element.style.left) + 1 + '%';
 	var jugador={
 		id: sessionStorage.getItem('idJugador'),
-		style: element.style
+		style: elementclone.style
 	}
 	socket.emit("moure",jugador);
 
@@ -85,10 +87,11 @@ function rightArrowPressed() {
 
 function upArrowPressed() {
 	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
-	element.style.top = parseInt(element.style.top) - 1 + '%';
+	var elementclone =element.cloneNode(true);
+	elementclone.style.top= parseInt(element.style.top) - 1 + '%';
 	var jugador={
 		id: sessionStorage.getItem('idJugador'),
-		style: element.style
+		style: elementclone.style
 	}
 	socket.emit("moure",jugador);
 
@@ -96,10 +99,11 @@ function upArrowPressed() {
 
 function downArrowPressed() {
 	var element = document.getElementById(sessionStorage.getItem('idJugador'));
-	element.style.top = parseInt(element.style.top) + 1 + '%';
+	var elementclone =element.cloneNode(true);
+	elementclone.style.top= parseInt(element.style.top) + 1 + '%';
 	var jugador={
 		id: sessionStorage.getItem('idJugador'),
-		style: element.style
+		style: elementclone.style
 	}
 	socket.emit("moure",jugador);
 
@@ -128,11 +132,6 @@ function moveSelection(evt) {
 
 function docReady()
 {
-	//var aleatori = Math.floor(Math.random()*5)+1;
-	/*var posBol={
-		left:Math.floor(Math.random() *2000)+1,
-		top:Math.floor(Math.random()*900) +1,
-	}*/
 	var obj={
 		id: sessionStorage.getItem('idJugador'),
 		jugadorPrincipal: "<div id="+sessionStorage.getItem('idJugador')+" class='player' type= 'player' name='player' style =' background-color:#f220e6;position:absolute;left:50%; top:50%'>"+sessionStorage.getItem('idJugador')+"</div>"
