@@ -63,11 +63,10 @@ socket.on("movent",function(data){
 
 function leftArrowPressed() {
 	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
-	var elementclone =element.cloneNode(true);
-	elementclone.style.left = parseInt(element.style.left) - 1 + '%';
+	element.style.left = parseInt(element.style.left) - 1 + '%';
 	var jugador={
 		id: sessionStorage.getItem('idJugador'),
-		style: elementclone.style
+		style: element.style
 	}
 	socket.emit("moure",jugador);
 
@@ -75,11 +74,10 @@ function leftArrowPressed() {
 
 function rightArrowPressed() {
 	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
-	var elementclone =element.cloneNode(true);
-	elementclone.style.left = parseInt(element.style.left) + 1 + '%';
+	element.style.left = parseInt(element.style.left) + 1 + '%';
 	var jugador={
 		id: sessionStorage.getItem('idJugador'),
-		style: elementclone.style
+		style: element.style
 	}
 	socket.emit("moure",jugador);
 
@@ -87,11 +85,10 @@ function rightArrowPressed() {
 
 function upArrowPressed() {
 	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
-	var elementclone =element.cloneNode(true);
-	elementclone.style.top= parseInt(element.style.top) - 1 + '%';
+	element.style.top = parseInt(element.style.top) - 1 + '%';
 	var jugador={
 		id: sessionStorage.getItem('idJugador'),
-		style: elementclone.style
+		style: element.style
 	}
 	socket.emit("moure",jugador);
 
@@ -99,11 +96,10 @@ function upArrowPressed() {
 
 function downArrowPressed() {
 	var element = document.getElementById(sessionStorage.getItem('idJugador'));
-	var elementclone =element.cloneNode(true);
-	elementclone.style.top= parseInt(element.style.top) + 1 + '%';
+	element.style.top = parseInt(element.style.top) + 1 + '%';
 	var jugador={
 		id: sessionStorage.getItem('idJugador'),
-		style: elementclone.style
+		style: element.style
 	}
 	socket.emit("moure",jugador);
 
