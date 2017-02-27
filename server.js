@@ -8,6 +8,7 @@ var teamB=[];
 var poses=[];
 var id=1;
 
+
 app.set('port', process.env.PORT || 3000);
 
 app.use(express.static('public'));
@@ -25,14 +26,11 @@ app.get('/prepartida', function (req, res) {
 })
 
 io.on('connection', function(socket){
-	socket.on('chat message', function(msg){
-		io.emit('chat message', msg);
-		
-	});
+
 	socket.on('nickname', function(nickname){
 		
 		var player = [id,nickname];
-		socket.emit('id',id);
+		socket.emit('welcome',id);
 		id++;
 		
 		if(teamA.length > teamB.length){
@@ -68,6 +66,28 @@ io.on('connection', function(socket){
 		}
 		io.emit("movent",data);
 	});
+
+
+
+
+	socket.on('gotit', function(player){
+		console.log('[INFO] Player ' + player.name + ' connecting!');
+		player.x = 0;
+		player.y = 0;
+		player.target.x = 0;
+		player.target.y = 0;
+		
+		socket.emit('gameSetup', {
+			gameWidth: 5000,
+			gameHeight: 5000
+		});
+		console.log('Total players: ' + (teamA.length + teamB.length));
+	});
+	
+	socket.on('windowResized', function (data) {
+		//currentPlayer.screenWidth = data.screenWidth;
+		//currentPlayer.screenHeight = data.screenHeight;
+    });
 });
 
 function mostrar(){
