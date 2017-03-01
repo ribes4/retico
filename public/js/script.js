@@ -26,15 +26,15 @@ var target = {x: player.x, y: player.y};
 
 //s'entrarà un cop s'hagi posat el nickname correcte i s'hagi donat al play
 function startGame() {
-    playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
-    document.getElementById('gameAreaWrapper').style.display = 'block';
-    document.getElementById('startMenuWrapper').style.display = 'none';
-    socket = io();
-    SetupSocket(socket);
-    animloop();
-	socket.emit('nickname',playerName)
+	playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
+	document.getElementById('gameAreaWrapper').style.display = 'block';
+	document.getElementById('startMenuWrapper').style.display = 'none';
+	socket = io();
+	SetupSocket(socket);
+	animloop();
+	//socket.emit('nickname',playerName)
+	socket.emit('respawn');
 }
-
 // check if nick is valid alphanumeric characters (and underscores)
 function validNick() {
     var regex = /^\w*$/;
@@ -117,7 +117,7 @@ function resize() {
 	socket.emit('windowResized', { screenWidth: screenWidth, screenHeight: screenHeight });
 }
 //-------------------------------------------------------------------------------------------
-function enterKey(event){
+/* function enterKey(event){
    		if (event.keyCode == 13) {
 	    		play();
 			return false;	
@@ -125,7 +125,7 @@ function enterKey(event){
 	};
 
 function play() {
-	socket.emit('nickname',document.getElementById("nickname").value)
+	socket.emit('nickname',document.getElementById("nickname").value);
 	document.getElementById("nickname").value="";
 	location.href="/chat";
 };
@@ -208,4 +208,5 @@ function docReady()
 	socket.emit("init_pose",obj);
 	
 	window.addEventListener('keydown', moveSelection);
-}
+}*/
+

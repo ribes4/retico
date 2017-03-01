@@ -5,14 +5,15 @@ Game.prototype.handleNetwork = function(socket) {
 	console.log(socket);
 // This is where you receive all socket messages
 
-	socket.on('welcome', function(id){
-		sessionStorage.setItem('idJugador',id);
-		player.id = id;
+	socket.on('welcome', function(playerSettings){
+		player = playerSettings;
+		//sessionStorage.setItem('idJugador',id);
+		//player.id = id;
 		player.name = playerName;
 		player.screenWidth = screenWidth;
 		player.screenHeight = screenHeight;
 		player.target = target;
-		alert("La teva id: "+ id + " i el teu nick: "+ playerName);
+		alert("La teva id: "+ player.id + " i el teu nick: "+ playerName);
 
 		socket.emit('gotit', player);
 	});
