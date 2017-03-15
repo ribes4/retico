@@ -1,3 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RETICO</title>
+
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+    <div id="gameAreaWrapper" style="display:none;">
+        <canvas tabindex="1" id="cvs"></canvas>
+    </div>
+    <div id="startMenuWrapper">
+        <div id="startMenu">
+            <p>RETICO</p>
+            <input type="text" tabindex="0" autofocus placeholder="Enter your name here" id="playerNameInput" />
+            <b class="input-error">Nick name must be alphanumeric characters only!</b>
+            <br />
+            <button id="startButton">Play</button>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/game.js"></script>
+    <script src="./js/script.js"></script>
+</body>
+</html>
+
+<!--
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,3 +49,5 @@
 <script src="js/script.js"></script>
 
 </html>
+//-->
+
