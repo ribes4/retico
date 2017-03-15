@@ -163,6 +163,14 @@ io.on('connection', function(socket){
 
         //socket.broadcast.emit('playerDisconnect', { name: currentPlayer.name });
 	});
+	
+	// Heartbeat function, update everytime.
+	socket.on('0', function(target) {
+		currentPlayer.lastHeartbeat = new Date().getTime();
+		if (target.x !== currentPlayer.x || target.y !== currentPlayer.y) {
+			currentPlayer.target = target;
+		}
+	});
 });
 
 function mostrar(){

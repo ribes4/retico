@@ -72,6 +72,8 @@ Game.prototype.handleGraphics = function(gfx) {
 	gfx.fillStyle = '#fbfcfc';
 	gfx.fillRect(0, 0, screenWidth, screenHeight);
 	
+	drawgrid();
+
 	gfx.fillStyle = '#2ecc71';
 	gfx.strokeStyle = '#27ae60';
 	gfx.font = 'bold 50px Verdana';
@@ -80,8 +82,8 @@ Game.prototype.handleGraphics = function(gfx) {
 	gfx.fillText('Retico under construction...', screenWidth / 2, screenHeight / 2);
 	gfx.strokeText('Retico under construction...', screenWidth / 2, screenHeight / 2);
 	
-
-	drawgrid();
+	//drawPlayers();
+        socket.emit('0', target); // playerSendTarget "Heartbeat".
 }
 
 //construeix la graella del fons
@@ -103,4 +105,12 @@ function drawgrid() {
 
     canvas.stroke();
     canvas.globalAlpha = 1;
+}
+
+function drawPlayers() {
+	var start = {
+		x: player.x - (screenWidth / 2),
+		y: player.y - (screenHeight / 2)
+	};
+	//....
 }
