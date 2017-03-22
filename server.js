@@ -100,7 +100,7 @@ io.on('connection', function(socket){
 		}
 		else {
 			console.log('[INFO] Player ' + player.name + ' connected!');
-			//sockets[player.id] = socket;
+			sockets[player.id] = socket;
 
 			player.x = 0;
 			player.y = 0;
