@@ -142,6 +142,7 @@ io.on('connection', function(socket){
 		}
 	});
 	
+	
 	socket.on('windowResized', function (data) {
 		currentPlayer.screenWidth = data.screenWidth;
 		currentPlayer.screenHeight = data.screenHeight;
@@ -173,9 +174,15 @@ io.on('connection', function(socket){
 	});
 });
 
+function 
+
+function moviment(){
+	
+}
+
 function mostrar(){
 
-	console.log("\n\n\n\n\nEQUIP A:");
+	console.log("\n\n\nEQUIP A:");
 	for(var i=0;i<teamA.length;i++){
 		var jugador = teamA[i];
 		console.log(jugador.id+": "+jugador.name);
@@ -187,6 +194,15 @@ function mostrar(){
 		console.log(jugador2.id+": "+jugador2.name);
 	}
 }
+
+function sendUpdate(){
+	users.forEach(function(u){
+		sockets[u.id].emit('serverTellPlayerMove', users);
+	});
+}
+
+setInterval(moviment, 1000);
+setInterval(sendUpdate,1000);
 
 http.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
