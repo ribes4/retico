@@ -174,12 +174,6 @@ io.on('connection', function(socket){
 	});
 });
 
-function 
-
-function moviment(){
-	
-}
-
 function mostrar(){
 
 	console.log("\n\n\nEQUIP A:");
@@ -201,7 +195,6 @@ function sendUpdate(){
 	});
 }
 
-setInterval(moviment, 1000);
 setInterval(sendUpdate,1000);
 
 http.listen(app.get('port'), function(){
