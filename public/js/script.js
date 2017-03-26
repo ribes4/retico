@@ -24,6 +24,10 @@ var player = {
 };
 var target = {x: player.x, y: player.y};
 
+var users =[]
+
+
+
 //s'entrarà un cop s'hagi posat el nickname correcte i s'hagi donat al play
 function startGame() {
 	playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');

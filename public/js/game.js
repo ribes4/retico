@@ -59,7 +59,26 @@ Game.prototype.handleNetwork = function(socket) {
 		resize();
 	});
 
+	socket.on('serverTellPlayerMove', function (userData){
+		var playerData;
+		for(var i=0; i < userData.length; i++){
+			//console.log("typeee: "+typeof(userData[i].id));
+			//if(typeof(userData[i].id) == "undefined"){
+			playerData = userData[i];
+			i = userData.length;
+			//}
+		}
+		if(playerType == 'player'){
+			var xoffset = player.x - playerData.x;
+			var yoffset = player.y - playerData.y;
 
+			player.x = playerData.x;
+			player.y = playerData.y;
+			player.xoffset = isNaN(xoffset) ? 0 : xoffset;
+			player.yoffset = isNaN(yoffset) ? 0 : yoffset;
+		}
+		users = userData;
+	});
 }
 
 Game.prototype.handleLogic = function() {
@@ -73,7 +92,8 @@ Game.prototype.handleGraphics = function(gfx) {
 	gfx.fillRect(0, 0, screenWidth, screenHeight);
 	
 	drawgrid();
-
+	//TODO dibuixar border
+	
 	gfx.fillStyle = '#2ecc71';
 	gfx.strokeStyle = '#27ae60';
 	gfx.font = 'bold 50px Verdana';
@@ -82,7 +102,7 @@ Game.prototype.handleGraphics = function(gfx) {
 	gfx.fillText('Retico under construction...', screenWidth / 2, screenHeight / 2);
 	gfx.strokeText('Retico under construction...', screenWidth / 2, screenHeight / 2);
 	
-	//drawPlayers();
+	drawPlayers();
         socket.emit('0', target); // playerSendTarget "Heartbeat".
 }
 
@@ -112,5 +132,10 @@ function drawPlayers() {
 		x: player.x - (screenWidth / 2),
 		y: player.y - (screenHeight / 2)
 	};
+	console.log('---------------Showing list of players---------------');
+	for(var z=0; z<users.length; z++){
+		console.log("player: "+ users[z].id);
+	}
+	
 	//....
 }
