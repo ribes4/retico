@@ -29,6 +29,7 @@ io.on('connection', function(socket){
 		id: socket.id,
 		x: 0,
 		y: 0,
+		hue: Math.round(Math.random() * 360),
 		lastHeartbeat: new Date().getTime(),
 		target: {
 		    x: 0,
@@ -102,11 +103,11 @@ io.on('connection', function(socket){
 			console.log('[INFO] Player ' + player.name + ' connected!');
 			sockets[player.id] = socket;
 
-			player.x = 0;
-			player.y = 0;
+			player.x = 100;
+			player.y = 100;
 			player.target.x = 0;
 			player.target.y = 0;
-	
+			player.hue = Math.round(Math.random() * 360);
 			currentPlayer = player;
 		    	currentPlayer.lastHeartbeat = new Date().getTime();
 		    	users.push(currentPlayer);
