@@ -7,7 +7,7 @@ var screenWidth = window.innerWidth;
 var screenHeight = window.innerHeight;
 
 var c = document.getElementById('cvs');
-var canvas = c.getContext('2d');
+var graph = c.getContext('2d');
 c.width = screenWidth; c.height = screenHeight;
 
 var KEY_ENTER = 13;
@@ -26,6 +26,14 @@ var target = {x: player.x, y: player.y};
 
 var users =[]
 
+var playerConfig = {
+    border: 6,
+    textColor: '#FFFFFF',
+    textBorder: '#000000',
+    textBorderSize: 3,
+    defaultSize: 30
+};
+var spin = -Math.PI;
 
 
 //s'entrarà un cop s'hagi posat el nickname correcte i s'hagi donat al play
@@ -95,7 +103,7 @@ function animloop(){
 
 function gameLoop() {
   game.handleLogic();
-  game.handleGraphics(canvas);
+  game.handleGraphics();
 }
 
 window.addEventListener('resize', function() {

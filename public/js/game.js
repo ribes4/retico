@@ -45,12 +45,12 @@ Game.prototype.handleNetwork = function(socket) {
 	// Handle error.
 	socket.on('connect_failed', function () {
 		socket.close();
-		//global.disconnected = true;
+		//disconnected = true;
 	});
 
 	socket.on('disconnect', function () {
 		socket.close();
-		//global.disconnected = true;
+		//disconnected = true;
 	});
 
 	socket.on('gameSetup', function(data) {
@@ -74,6 +74,7 @@ Game.prototype.handleNetwork = function(socket) {
 
 			player.x = playerData.x;
 			player.y = playerData.y;
+			player.hue = playerData.hue;
 			player.xoffset = isNaN(xoffset) ? 0 : xoffset;
 			player.yoffset = isNaN(yoffset) ? 0 : yoffset;
 		}
@@ -86,21 +87,21 @@ Game.prototype.handleLogic = function() {
   // This is where you update your game logic
 }
 
-Game.prototype.handleGraphics = function(gfx) {
+Game.prototype.handleGraphics = function() {
 	// This is where you draw everything
-	gfx.fillStyle = '#fbfcfc';
-	gfx.fillRect(0, 0, screenWidth, screenHeight);
+	graph.fillStyle = '#fbfcfc';
+	graph.fillRect(0, 0, screenWidth, screenHeight);
 	
 	drawgrid();
 	//TODO dibuixar border
 	
-	gfx.fillStyle = '#2ecc71';
-	gfx.strokeStyle = '#27ae60';
-	gfx.font = 'bold 50px Verdana';
-	gfx.textAlign = 'center';
-	gfx.lineWidth = 2;
-	gfx.fillText('Retico under construction...', screenWidth / 2, screenHeight / 2);
-	gfx.strokeText('Retico under construction...', screenWidth / 2, screenHeight / 2);
+	graph.fillStyle = '#2ecc71';
+	graph.strokeStyle = '#27ae60';
+	graph.font = 'bold 50px Verdana';
+	graph.textAlign = 'center';
+	graph.lineWidth = 2;
+	graph.fillText('Retico under construction...', screenWidth / 2, screenHeight / 2);
+	graph.strokeText('Retico under construction...', screenWidth / 2, screenHeight / 2);
 	
 	drawPlayers();
         socket.emit('0', target); // playerSendTarget "Heartbeat".
@@ -108,23 +109,23 @@ Game.prototype.handleGraphics = function(gfx) {
 
 //construeix la graella del fons
 function drawgrid() {
-     canvas.lineWidth = 1;
-     canvas.strokeStyle = '#000000';
-     canvas.globalAlpha = 0.15;
-     canvas.beginPath();
+     graph.lineWidth = 1;
+     graph.strokeStyle = '#000000';
+     graph.globalAlpha = 0.15;
+     graph.beginPath();
 
     for (var x = -0 - window.screenWidth / 2; x < window.screenWidth; x += window.screenHeight / 18) {
-        canvas.moveTo(x, 0);
-        canvas.lineTo(x, window.screenHeight);
+        graph.moveTo(x, 0);
+        graph.lineTo(x, window.screenHeight);
     }
 
     for (var y = -0 - window.screenHeight / 2 ; y < window.screenHeight; y += window.screenHeight / 18) {
-        canvas.moveTo(0, y);
-        canvas.lineTo(window.screenWidth, y);
+        graph.moveTo(0, y);
+        graph.lineTo(window.screenWidth, y);
     }
 
-    canvas.stroke();
-    canvas.globalAlpha = 1;
+    graph.stroke();
+    graph.globalAlpha = 1;
 }
 
 function drawPlayers() {
@@ -132,10 +133,95 @@ function drawPlayers() {
 		x: player.x - (screenWidth / 2),
 		y: player.y - (screenHeight / 2)
 	};
-	console.log('---------------Showing list of players---------------');
+
 	for(var z=0; z<users.length; z++){
-		console.log("player: "+ users[z].id);
+		var userCurrent = users[z];
+
+		var x = 0;
+		var y = 0;
+
+		var points = 30 + ~~(30/5);
+		var increase = Math.PI * 2 / points;
+
+		graph.strokeStyle = 'hsl(' + userCurrent.hue + ', 100%, 45%)';
+		graph.fillStyle = 'hsl(' + userCurrent.hue + ', 100%, 50%)';
+		graph.lineWidth = playerConfig.border;
+
+		var xstore = [];
+		var ystore = [];
+
+
+		spin +=0.0;
+		var radius = 50
+
+		var circle = {
+		    x: userCurrent.x - start.x,
+		    y: userCurrent.y - start.y
+		};
+
+		for (var i = 0; i < points; i++) {
+		console.log("userCurrent: "+ userCurrent.x + " "+ userCurrent.y);
+		    x = radius * Math.cos(spin) + circle.x;
+		    y = radius * Math.sin(spin) + circle.y;
+
+		    x = valueInRange(-userCurrent.x + screenWidth / 2,
+			 gameWidth - userCurrent.x + screenWidth / 2, x);
+		    y = valueInRange(-userCurrent.y + screenHeight / 2,
+         		 gameHeight - userCurrent.y + screenHeight / 2, y);
+		
+	  	    /*x = valueInRange(-cellCurrent.x - player.x + screenWidth / 2 + (radius/3),
+				                 gameWidth - cellCurrent.x + gameWidth - player.x + screenWidth / 2 - (radius/3), x);
+		    y = valueInRange(-cellCurrent.y - player.y + screenHeight / 2 + (radius/3),
+				                 gameHeight - cellCurrent.y + gameHeight - player.y + screenHeight / 2 - (radius/3) , y);
+*/
+		    spin += increase;
+		    xstore[i] = x;
+		    ystore[i] = y;
+		}
+		for (i = 0; i < points; ++i) {
+		    if (i === 0) {
+		        graph.beginPath();
+		        graph.moveTo(xstore[i], ystore[i]);
+		    } else if (i > 0 && i < points - 1) {
+		        graph.lineTo(xstore[i], ystore[i]);
+		    } else {
+		        graph.lineTo(xstore[i], ystore[i]);
+		        graph.lineTo(xstore[0], ystore[0]);
+		    }
+
+		}
+		graph.lineJoin = 'round';
+		graph.lineCap = 'round';
+		graph.fill();
+		graph.stroke();
+		var nameCell = "";
+		if(typeof(userCurrent.id) == "undefined")
+		    nameCell = player.name;
+		else
+		    nameCell = userCurrent.name;
+
+		var fontSize = Math.max(radius / 3, 12);
+		graph.lineWidth = playerConfig.textBorderSize;
+		graph.fillStyle = playerConfig.textColor;
+		graph.strokeStyle = playerConfig.textBorder;
+		graph.miterLimit = 1;
+		graph.lineJoin = 'round';
+		graph.textAlign = 'center';
+		graph.textBaseline = 'middle';
+		graph.font = 'bold ' + fontSize + 'px sans-serif';
+
+
+		graph.strokeText(nameCell, circle.x, circle.y);
+		graph.fillText(nameCell, circle.x, circle.y);
+
+
+
 	}
 	
 	//....
+	
+}
+
+function valueInRange(min, max, value) {
+    return Math.min(max, Math.max(min, value));
 }
