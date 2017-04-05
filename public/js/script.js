@@ -2,17 +2,15 @@ var playerName;
 var playerType = 'player';
 var playerNameInput = document.getElementById('playerNameInput');
 var socket;
-var Canvas = requiere('./canvas');
-window.canvas = new Canvas();
+
 var screenWidth = window.innerWidth;
 var screenHeight = window.innerHeight;
 
-var c = window.canvas.cv;
-var graph = c.getContext('2d');
-c.width = screenWidth; c.height = screenHeight;
-
 var KEY_ENTER = 13;
-
+var KEY_LEFT= 37;
+var KEY_UP = 38;
+var KEY_RIGHT= 39;
+var KEY_DOWN= 40;
 var game = new Game();
 
 var player = {
@@ -24,7 +22,7 @@ var player = {
     target: {x: screenWidth / 2, y: screenHeight / 2}
 };
 var target = {x: player.x, y: player.y};
-
+var continuity = false;
 var users =[]
 
 var playerConfig = {
@@ -35,6 +33,10 @@ var playerConfig = {
     defaultSize: 30
 };
 var spin = -Math.PI;
+
+var canvas = new Canvas();
+var c = canvas.cv;
+var graph = c.getContext('2d');
 
 
 //s'entrarà un cop s'hagi posat el nickname correcte i s'hagi donat al play
@@ -47,7 +49,7 @@ function startGame() {
 	animloop();
 	//socket.emit('nickname',playerName)
 	socket.emit('respawn');
-	window.canvas.socket = socket;
+	canvas.socket = socket;
 
 }
 // check if nick is valid alphanumeric characters (and underscores)
