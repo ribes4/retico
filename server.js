@@ -5,7 +5,6 @@ var io = require('socket.io')(http);
 
 // Import utilities.
 var util = require('./lib/util');
-
 var users=[];
 var teamA=[];
 var teamB=[];
@@ -93,8 +92,8 @@ io.on('connection', function(socket){
 
 	socket.on('0', function(target) {
 		currentPlayer.lastHeartbeat = new Date().getTime();
-		if (target.x !== currenPlayer.x || target.y !== currentPlayer.y) {
-			currenPlayer.target = target;
+		if (target.x !== currentPlayer.x || target.y !== currentPlayer.y) {
+			currentPlayer.target = target;
 		}
 	});
 
