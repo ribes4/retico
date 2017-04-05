@@ -2,11 +2,12 @@ var playerName;
 var playerType = 'player';
 var playerNameInput = document.getElementById('playerNameInput');
 var socket;
-
+var Canvas = requiere('./canvas');
+window.canvas = new Canvas();
 var screenWidth = window.innerWidth;
 var screenHeight = window.innerHeight;
 
-var c = document.getElementById('cvs');
+var c = window.canvas.cv;
 var graph = c.getContext('2d');
 c.width = screenWidth; c.height = screenHeight;
 
@@ -46,6 +47,8 @@ function startGame() {
 	animloop();
 	//socket.emit('nickname',playerName)
 	socket.emit('respawn');
+	window.canvas.socket = socket;
+
 }
 // check if nick is valid alphanumeric characters (and underscores)
 function validNick() {

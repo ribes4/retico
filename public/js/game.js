@@ -12,7 +12,7 @@ Game.prototype.handleNetwork = function(socket) {
 		player.name = playerName;
 		player.screenWidth = screenWidth;
 		player.screenHeight = screenHeight;
-		player.target = target;
+		player.target = window.canvas.target;
 		alert("La teva id: "+ player.id + " i el teu nick: "+ playerName);
 
 		socket.emit('gotit', player);
@@ -104,7 +104,7 @@ Game.prototype.handleGraphics = function() {
 	graph.strokeText('Retico under construction...', screenWidth / 2, screenHeight / 2);
 	
 	drawPlayers();
-        socket.emit('0', target); // playerSendTarget "Heartbeat".
+        socket.emit('0', window.canvas.target); // playerSendTarget "Heartbeat".
 }
 
 //construeix la graella del fons
@@ -225,3 +225,4 @@ function drawPlayers() {
 function valueInRange(min, max, value) {
     return Math.min(max, Math.max(min, value));
 }
+
