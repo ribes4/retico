@@ -175,6 +175,7 @@ io.on('connection', function(socket){
 		currentPlayer.lastHeartbeat = new Date().getTime();
 		if (target.x !== currentPlayer.x || target.y !== currentPlayer.y) {
 			currentPlayer.target = target;
+			console.log(currentPlayer.x + ', ' + currentPlayer.y);
 		}
 	});
 });
@@ -200,6 +201,30 @@ function sendUpdate(){
 	});
 }
 
+function moveloop(){
+	for(var i = 0; i < users.length; i++){
+		//tickPlayer(users[i]);
+		movePlayer(users[i]);
+	}
+}
+
+function movePlayer(player){
+	var x=0, y=0;
+	
+	var target = {
+		x: player.x + player.target.x,
+		y: player.y + player.target.y
+	};
+	var dist = Math.sqrt(Math.pow(target.y,2) + Math.pow(target.x,2));
+	var deg = Math.atan2(target.y,target.x);
+	
+	player.x = Math.cos(deg) * dist;
+	player.y = Math.sin(deg) * dist;
+	
+}
+
+
+setInterval(moveloop,100);
 setInterval(sendUpdate,1000);
 
 http.listen(app.get('port'), function(){
