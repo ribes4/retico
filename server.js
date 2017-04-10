@@ -11,7 +11,9 @@ var teamB=[];
 var sockets = {};
 //var poses=[];
 //var id=1;
-
+var width=5000;
+var height=5000;
+var radius=50;
 
 app.set('port', process.env.PORT || 3000);
 
@@ -175,7 +177,7 @@ io.on('connection', function(socket){
 		currentPlayer.lastHeartbeat = new Date().getTime();
 		if (target.x !== currentPlayer.x || target.y !== currentPlayer.y) {
 			currentPlayer.target = target;
-			console.log(currentPlayer.x + ', ' + currentPlayer.y);
+			//console.log(currentPlayer.x + ', ' + currentPlayer.y);
 		}
 	});
 });
@@ -218,9 +220,19 @@ function movePlayer(player){
 	var dist = Math.sqrt(Math.pow(target.y,2) + Math.pow(target.x,2));
 	var deg = Math.atan2(target.y,target.x);
 	
-	player.x = Math.cos(deg) * dist;
-	player.y = Math.sin(deg) * dist;
+	console.log(player.x + ", " + player.y);
 	
+	var nx, ny;
+	nx = Math.cos(deg) * dist;
+	ny = Math.sin(deg) * dist;
+	
+	if((nx > radius) && (nx < (width-radius))){ 
+		player.x = nx;
+	}
+
+	if((ny > radius) && (ny < (height-radius))){
+		player.y = ny;
+	}
 }
 
 
