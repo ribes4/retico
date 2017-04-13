@@ -11,9 +11,17 @@ var teamB=[];
 var sockets = {};
 //var poses=[];
 //var id=1;
+
+var movimentsA = [];
+var movimentsB = [];
+
 var width=5000;
 var height=5000;
 var radius=50;
+var velocitat=5;
+
+var ax = 0;
+var ay = 0;
 
 app.set('port', process.env.PORT || 3000);
 
@@ -109,8 +117,8 @@ io.on('connection', function(socket){
 			console.log('[INFO] Player ' + player.name + ' connected!');
 			sockets[player.id] = socket;
 
-			player.x = 100;
-			player.y = 100;
+			player.x = height/2;
+			player.y = width/2;
 			player.target.x = 0;
 			player.target.y = 0;
 			player.hue = Math.round(Math.random() * 360);
@@ -211,33 +219,132 @@ function moveloop(){
 }
 
 function movePlayer(player){
-	var x=0, y=0;
 	
-	var target = {
+	/*var target = {
 		x: player.x + player.target.x,
 		y: player.y + player.target.y
 	};
-	var dist = Math.sqrt(Math.pow(target.y,2) + Math.pow(target.x,2));
-	var deg = Math.atan2(target.y,target.x);
+	var dist = Math.sqrt(Math.pow(target.y,2) + Math.pow(target.x,2));*/
+	var deg = Math.atan2(player.target.y,player.target.x);
 	
-	console.log(player.x + ", " + player.y);
 	
 	var nx, ny;
-	nx = Math.cos(deg) * dist;
-	ny = Math.sin(deg) * dist;
+	nx = (Math.cos(deg)*velocitat) + player.x;
+	ny = (Math.sin(deg)*velocitat) + player.y;
 	
-	if((nx > radius) && (nx < (width-radius))){ 
-		player.x = nx;
+	if(nx > radius){
+		if(nx < (width-radius)){
+			player.x = nx;
+		}
+		else{
+			player.x = width-radius;
+		}
 	}
-
-	if((ny > radius) && (ny < (height-radius))){
-		player.y = ny;
+	else{
+		player.x = radius;
+	}
+	
+	
+	if(ny > radius){
+		if(ny < (height-radius)){
+			player.y = ny;
+		}
+		else{
+			player.y = height-radius;
+		}
+	}
+	else{
+		player.y = radius;
 	}
 }
 
+function equip(player){
+	var equip='';
+	var continuar = true;
+	var pos = 0;
+	while(continuar){
+		if(player.id.localCompare(teamA[pos].id)==0){ //Jugador trobat a la Taula de l'equip A
+			equip = 'A';
+		}
+		else{
+			pos++;
+		}
+	}
+	
+	pos = 0;
+	while(continuar){
+		if(player.id.localCompare(teamB[pos].id)==0){ //Jugador trobat a la Taula de l'equip B
+			equip = 'B';
+		}
+		else{
+			pos++;
+		}
+	}
+	
+	return equip;
+}
 
-setInterval(moveloop,100);
-setInterval(sendUpdate,1000);
+function afegirMoviment(player){
+
+	if(equip(player) == 'A'){
+		var pos = 0;
+		var continuar = true;
+		while((pos < movimentsA.length) && continuar){
+			if(player.id.localCompare(movimentsA[pos].id)==0){
+				movimentsA[pos].target.x = player.target.x;
+				movimentsA[pos].target.y = player.target.y;
+				continuar = false;
+			}
+			else{
+				pos++;
+			}
+		}
+		
+		if(continuar){
+			var moviment = {
+				id: player.id,
+				target: {
+					x: player.target.x,
+					y: player.target.y
+				}
+			}
+			
+			movimentsA.push(moviment);
+		}
+	}
+	else{ //Equip B
+		var pos = 0;
+		var continuar = true;
+		while((pos < movimentsB.length) && continuar){
+			if(player.id.localCompare(movimentsB[pos].id)==0){
+				movimentsB[pos].target.x = player.target.x;
+				movimentsB[pos].target.y = player.target.y;
+				continuar = false;
+			}
+			else{
+				pos++;
+			}
+		}
+		
+		if(continuar){
+			var moviment = {
+				id: player.id,
+				target: {
+					x: player.target.x,
+					y: player.target.y
+				}
+			}
+			
+			movimentsB.push(moviment);
+		}
+	}
+	
+	
+}
+
+
+setInterval(moveloop,1000/60);
+setInterval(sendUpdate,1000/40);
 
 http.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
