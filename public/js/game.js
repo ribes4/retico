@@ -93,7 +93,7 @@ Game.prototype.handleGraphics = function() {
 	graph.fillRect(0, 0, screenWidth, screenHeight);
 	
 	drawgrid();
-	//TODO dibuixar border
+	drawMarge();
 	
 	graph.fillStyle = '#2ecc71';
 	graph.strokeStyle = '#27ae60';
@@ -128,6 +128,53 @@ function drawgrid() {
     graph.globalAlpha = 1;
 }
 
+function drawMarge(){
+	var lineColor = '#000000';
+	graph.lineWidth = 1;
+	graph.strokeStyle = playerConfig.borderColor;
+
+	// Left-vertical.
+	if (player.x <= screenWidth/2) {
+		graph.beginPath();
+		graph.moveTo(screenWidth/2 - player.x, 0 ? player.y > screenHeight/2 : screenHeight/2 - player.y);
+		graph.lineTo(screenWidth/2 - player.x, gameHeight + screenHeight/2 - player.y);
+		graph.strokeStyle = lineColor;
+		graph.stroke();
+	}
+
+	// Top-horizontal.
+	if (player.y <= screenHeight/2) {
+		graph.beginPath();
+		graph.moveTo(0 ? player.x > screenWidth/2 : screenWidth/2 - player.x, screenHeight/2 - player.y);
+		graph.lineTo(gameWidth + screenWidth/2 - player.x, screenHeight/2 - player.y);
+		graph.strokeStyle = lineColor;
+		graph.stroke();
+	}
+
+	// Right-vertical.
+	if (gameWidth - player.x <= screenWidth/2) {
+		graph.beginPath();
+		graph.moveTo(gameWidth + screenWidth/2 - player.x,
+		screenHeight/2 - player.y);
+		graph.lineTo(gameWidth + screenWidth/2 - player.x,
+		gameHeight + screenHeight/2 - player.y);
+		graph.strokeStyle = lineColor;
+		graph.stroke();
+	}
+
+	// Bottom-horizontal.
+	if (gameHeight - player.y <= screenHeight/2) {
+		graph.beginPath();
+		graph.moveTo(gameWidth + screenWidth/2 - player.x,
+		gameHeight + screenHeight/2 - player.y);
+		graph.lineTo(screenWidth/2 - player.x,
+		gameHeight + screenHeight/2 - player.y);
+		graph.strokeStyle = lineColor;
+		graph.stroke();
+	}
+
+}
+
 function drawPlayers() {
 	var start = {
 		x: player.x - (screenWidth / 2),
@@ -160,7 +207,6 @@ function drawPlayers() {
 		};
 
 		for (var i = 0; i < points; i++) {
-		console.log("userCurrent: "+ userCurrent.x + " "+ userCurrent.y);
 		    x = radius * Math.cos(spin) + circle.x;
 		    y = radius * Math.sin(spin) + circle.y;
 

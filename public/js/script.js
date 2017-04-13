@@ -5,6 +5,8 @@ var socket;
 
 var screenWidth = window.innerWidth;
 var screenHeight = window.innerHeight;
+var gameWidth;
+var gameHeight;
 
 var KEY_ENTER = 13;
 var KEY_LEFT= 37;
@@ -22,7 +24,7 @@ var player = {
     target: {x: screenWidth / 2, y: screenHeight / 2}
 };
 var target = {x: player.x, y: player.y};
-var continuity = false;
+var continuity = true;
 var users =[]
 
 var playerConfig = {
@@ -133,97 +135,4 @@ function resize() {
 
 	socket.emit('windowResized', { screenWidth: screenWidth, screenHeight: screenHeight });
 }
-//-------------------------------------------------------------------------------------------
-/* function enterKey(event){
-   		if (event.keyCode == 13) {
-	    		play();
-			return false;	
-		}
-	};
-
-function play() {
-	socket.emit('nickname',document.getElementById("nickname").value);
-	document.getElementById("nickname").value="";
-	location.href="/chat";
-};
-
-	  
-		
-
-function leftArrowPressed() {
-	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
-	element.style.left = parseInt(element.style.left) - 1 + '%';
-	var jugador={
-		id: sessionStorage.getItem('idJugador'),
-		style: element.style
-	}
-	socket.emit("moure",jugador);
-
-}
-
-function rightArrowPressed() {
-	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
-	element.style.left = parseInt(element.style.left) + 1 + '%';
-	var jugador={
-		id: sessionStorage.getItem('idJugador'),
-		style: element.style
-	}
-	socket.emit("moure",jugador);
-
-}
-
-function upArrowPressed() {
-	var element = document.getElementById(	sessionStorage.getItem('idJugador'));
-	element.style.top = parseInt(element.style.top) - 1 + '%';
-	var jugador={
-		id: sessionStorage.getItem('idJugador'),
-		style: element.style
-	}
-	socket.emit("moure",jugador);
-
-}
-
-function downArrowPressed() {
-	var element = document.getElementById(sessionStorage.getItem('idJugador'));
-	element.style.top = parseInt(element.style.top) + 1 + '%';
-	var jugador={
-		id: sessionStorage.getItem('idJugador'),
-		style: element.style
-	}
-	socket.emit("moure",jugador);
-
-}
-
-function moveSelection(evt) {
-	var event = window.event ? window.event : e;
-	console.log(event.keyCode)
-	console.log(sessionStorage.getItem('idJugador'))
-	switch (evt.keyCode) {
-		case 37:
-			leftArrowPressed();
-			break;
-		case 39:
-			rightArrowPressed();
-			break;
-		case 38:
-			upArrowPressed();
-			break;
-		case 40:
-			downArrowPressed();
-			break;
-	}
-	
-};
-
-function docReady()
-{
-	var obj={
-		id: sessionStorage.getItem('idJugador'),
-		jugadorPrincipal: "<div id="+sessionStorage.getItem('idJugador')+" class='player' type= 'player' name='player' style =' background-color:#f220e6;position:absolute;left:50%; top:50%'>"+sessionStorage.getItem('idJugador')+"</div>"
-	}
-	
-	socket.emit("init_pose",obj);
-	
-	window.addEventListener('keydown', moveSelection);
-}*/
 
