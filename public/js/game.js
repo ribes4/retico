@@ -114,12 +114,12 @@ function drawgrid() {
      graph.globalAlpha = 0.15;
      graph.beginPath();
 
-    for (var x = -0 - window.screenWidth / 2; x < window.screenWidth; x += window.screenHeight / 18) {
+    for (var x = -0 - player.x; x < screenWidth; x += screenHeight / 18) {
         graph.moveTo(x, 0);
         graph.lineTo(x, window.screenHeight);
     }
 
-    for (var y = -0 - window.screenHeight / 2 ; y < window.screenHeight; y += window.screenHeight / 18) {
+    for (var y = -0 - player.y ; y < screenHeight; y += screenHeight / 18) {
         graph.moveTo(0, y);
         graph.lineTo(window.screenWidth, y);
     }
