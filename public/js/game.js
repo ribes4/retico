@@ -95,14 +95,6 @@ Game.prototype.handleGraphics = function() {
 	drawgrid();
 	drawMarge();
 	
-	graph.fillStyle = '#2ecc71';
-	graph.strokeStyle = '#27ae60';
-	graph.font = 'bold 50px Verdana';
-	graph.textAlign = 'center';
-	graph.lineWidth = 2;
-	graph.fillText('Retico under construction...', screenWidth / 2, screenHeight / 2);
-	graph.strokeText('Retico under construction...', screenWidth / 2, screenHeight / 2);
-	
 	drawPlayers();
         socket.emit('0', canvas.target); // playerSendTarget "Heartbeat".
 }
