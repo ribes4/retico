@@ -7,7 +7,7 @@ Game.prototype.handleNetwork = function(socket) {
 
 	socket.on('welcome', function(playerSettings){
 		player = playerSettings;
-		//sessionStorage.setItem('idJugador',id);
+		
 		//player.id = id;
 		player.name = playerName;
 		player.screenWidth = screenWidth;
@@ -17,30 +17,7 @@ Game.prototype.handleNetwork = function(socket) {
 
 		socket.emit('gotit', player);
 	});
-	/*
-	socket.on('pose',function(data){
-		for (i=0;i< data.length;i++){
-			var element = document.getElementById(data[i].id);
-			console.log(element)
-			if(!element){
-				$("#plataforma").append(data[i].jugadorPrincipal);
-			}
-			else{
-				element = data[i].jugadorPrincipal;
 	
-			}
-		}
-	});
-
-	socket.on("movent",function(data){
-	
-		var move={
-			left: data.style.left,
-			top: data.style.top
-		}
-		$("#"+ data.id).css(move);
-	});
-	*/ 
 
 	// Handle error.
 	socket.on('connect_failed', function () {
@@ -62,11 +39,12 @@ Game.prototype.handleNetwork = function(socket) {
 	socket.on('serverTellPlayerMove', function (userData){
 		var playerData;
 		for(var i=0; i < userData.length; i++){
+		console.log("ID"+ userData[i].id);
 			//console.log("typeee: "+typeof(userData[i].id));
-			//if(typeof(userData[i].id) == "undefined"){
+			if(userData[i].id === player.id){
 			playerData = userData[i];
 			i = userData.length;
-			//}
+			}
 		}
 		if(playerType == 'player'){
 			var xoffset = player.x - playerData.x;
@@ -201,7 +179,7 @@ function drawPlayers() {
 		for (var i = 0; i < points; i++) {
 		    x = radius * Math.cos(spin) + circle.x;
 		    y = radius * Math.sin(spin) + circle.y;
-
+			
 		    x = valueInRange(-userCurrent.x + screenWidth / 2,
 			 gameWidth - userCurrent.x + screenWidth / 2, x);
 		    y = valueInRange(-userCurrent.y + screenHeight / 2,
@@ -233,7 +211,7 @@ function drawPlayers() {
 		graph.fill();
 		graph.stroke();
 		var nameCell = "";
-		if(typeof(userCurrent.id) == "undefined")
+		if(userCurrent.id === player.id)
 		    nameCell = player.name;
 		else
 		    nameCell = userCurrent.name;
