@@ -157,7 +157,7 @@ function drawPlayers() {
 		var x = 0;
 		var y = 0;
 
-		var points = 30 + ~~(30/5);
+		var points = 30;
 		var increase = Math.PI * 2 / points;
 
 		graph.strokeStyle = 'hsl(' + userCurrent.hue + ', 100%, 45%)';
@@ -179,12 +179,12 @@ function drawPlayers() {
 		for (var i = 0; i < points; i++) {
 		    x = radius * Math.cos(spin) + circle.x;
 		    y = radius * Math.sin(spin) + circle.y;
-			
-		    x = valueInRange(-userCurrent.x + screenWidth / 2,
-			 gameWidth - userCurrent.x + screenWidth / 2, x);
-		    y = valueInRange(-userCurrent.y + screenHeight / 2,
-         		 gameHeight - userCurrent.y + screenHeight / 2, y);
-		
+		    if(userCurrent.id === player.id){
+			    x = valueInRange(-userCurrent.x + screenWidth / 2,
+				 gameWidth - userCurrent.x + screenWidth / 2, x);
+			    y = valueInRange(-userCurrent.y + screenHeight / 2,
+		 		 gameHeight - userCurrent.y + screenHeight / 2, y);
+		}
 	  	    /*x = valueInRange(-cellCurrent.x - player.x + screenWidth / 2 + (radius/3),
 				                 gameWidth - cellCurrent.x + gameWidth - player.x + screenWidth / 2 - (radius/3), x);
 		    y = valueInRange(-cellCurrent.y - player.y + screenHeight / 2 + (radius/3),
