@@ -6,22 +6,30 @@ var io = require('socket.io')(http);
 // Import utilities.
 var util = require('./lib/util');
 var users=[];
-var teamA=[];
-var teamB=[];
+var nTeams = 2;
 var sockets = {};
 //var poses=[];
 //var id=1;
 
-var movimentsA = [];
-var movimentsB = [];
 
-var width=5000;
-var height=5000;
+var Equips=[];
+
+for(var i=0;i<nTeams;i++){
+	var e = {
+		id: i+1,
+		x: 0,
+		y: 0,
+		players: [],
+		hue: Math.round(Math.random()*360)
+	};
+	Equips.push(e);
+}
+
+var width=1000;
+var height=3000;
 var radius=50;
 var velocitat=5;
 
-var ax = 0;
-var ay = 0;
 
 app.set('port', process.env.PORT || 3000);
 
@@ -43,7 +51,8 @@ io.on('connection', function(socket){
 		target: {
 		    x: 0,
 		    y: 0
-		}
+		},
+		team: 0
 	};	
 
 
@@ -59,7 +68,7 @@ io.on('connection', function(socket){
 		console.log('[INFO] User ' + currentPlayer.name + ' respawned!');
 	});
 
-	socket.on('nickname', function(nickname){
+	/*socket.on('nickname', function(nickname){
 		
 		var player = [id,nickname];
 		socket.emit('welcome',id);
@@ -84,20 +93,20 @@ io.on('connection', function(socket){
 				mostrar();
 			}
 		}
-	});
+	});*//*
 	socket.on("init_pose", function(data){
 		poses.push(data);
 		io.emit("pose",poses);
-	});
+	});*/
 	
-	socket.on("moure", function(data){
+	/*socket.on("moure", function(data){
 		for( i=0;i< poses.length;i++){
 			if(poses[i].id==data.id){
 				poses[i].jugadorPrincipal = "<div id="+data.id+" class='player' type= 'player' name='player' style =' background-color:#f220e6;position:absolute;left:"+data.style.left+"; top:"+data.style.top+"'>"+data.id+"</div>"				
 			}
 		}
 		io.emit("movent",data);
-	});
+	});*/
 
 
 	socket.on('0', function(target) {
@@ -121,13 +130,25 @@ io.on('connection', function(socket){
 			player.y = width/2;
 			player.target.x = 0;
 			player.target.y = 0;
-			player.hue = Math.round(Math.random() * 360);
 			currentPlayer = player;
 		    	currentPlayer.lastHeartbeat = new Date().getTime();
 		    	users.push(currentPlayer);
 
 			//assigna el jugador al equip amb menys jugadors
-			if(teamA.length > teamB.length){
+			
+			var equip=0;
+			for(var i=0;i<Equips.length;i++){
+				if(Equips[equip].players.length > Equips[i].players.length){
+					equip = i;
+				}
+			}
+			
+			currentPlayer.team = Equips[equip].id;
+			Equips[equip].players.push(currentPlayer);
+			
+			sockets[player.id].emit('setTeam',currentPlayer.team);
+			
+			/*if(teamA.length > teamB.length){
 				teamB.push(currentPlayer);
 				mostrar();
 			}
@@ -145,15 +166,15 @@ io.on('connection', function(socket){
 					teamB.push(currentPlayer);
 					mostrar();
 				}
-			}
+			}*/
 		    	
 		    	
 			socket.emit('gameSetup', {
-				gameWidth: 5000,
-				gameHeight: 5000
+				gameWidth: width,
+				gameHeight: height
 			});
 
-			console.log('Total players: ' + (teamA.length + teamB.length));
+			console.log('Total players: ' + users.length);
 		}
 	});
 	
@@ -168,14 +189,14 @@ io.on('connection', function(socket){
 			//elimina el jugador de la llista de users
 			users.splice(util.findIndex(users, currentPlayer.id), 1);
 		}
-		if (util.findIndex(teamA, currentPlayer.id) > -1){
-			teamA.splice(util.findIndex(teamA, currentPlayer.id), 1);
+
+		for(var i=0;i<Equips.length;i++){
+			if (util.findIndex(Equips[i].players, currentPlayer.id) > -1){
+				Equips[i].players.splice(util.findIndex(Equips[i].players, currentPlayer.id), 1);
 			}
-		if (util.findIndex(teamB, currentPlayer.id) > -1){
-			teamB.splice(util.findIndex(teamB, currentPlayer.id), 1);
 		}
 		
-        	console.log('[INFO] User ' + currentPlayer.name + ' disconnected!');
+        console.log('[INFO] User ' + currentPlayer.name + ' disconnected!');
 
         //socket.broadcast.emit('playerDisconnect', { name: currentPlayer.name });
 	});
@@ -192,41 +213,43 @@ io.on('connection', function(socket){
 
 function mostrar(){
 
-	console.log("\n\n\nEQUIP A:");
-	for(var i=0;i<teamA.length;i++){
-		var jugador = teamA[i];
-		console.log(jugador.id+": "+jugador.name);
-	}
-	
-	console.log("\nEQUIP B:");
-	for(var j=0;j<teamB.length;j++){
-		var jugador2 = teamB[j];
-		console.log(jugador2.id+": "+jugador2.name);
+	for(var j=0;j<Equips.length;j++){
+		console.log("\n\n" + Equips[j].id);
+		for(var i=0;i<Equips[j].players[i].length;i++){
+			var jugador = Equips[j].players[i];
+			console.log(jugador.id+": "+jugador.name);
+		}
 	}
 }
 
 function sendUpdate(){
 	users.forEach(function(u){
-		sockets[u.id].emit('serverTellPlayerMove', users);
+		sockets[u.id].emit('serverTellTeamMove', Equips);
 	});
 }
 
 function moveloop(){
-	for(var i = 0; i < users.length; i++){
-		//tickPlayer(users[i]);
-		movePlayer(users[i]);
+	for(var i=0;i<Equips.length;i++){
+		moveTeam(Equips[i]);
 	}
 }
 
-function movePlayer(player){
+/*function movePlayer(player){
 	
 	/*var target = {
 		x: player.x + player.target.x,
 		y: player.y + player.target.y
-	};
-	var dist = Math.sqrt(Math.pow(target.y,2) + Math.pow(target.x,2));*/
-	var deg = Math.atan2(player.target.y,player.target.x);
+	};*/
+	//var dist = Math.sqrt(Math.pow(target.y,2) + Math.pow(target.x,2));
 	
+	/*if(equip(player)=='A'){
+		var deg = Math.atan2(movimentA.y,movimentA.x);
+	}
+	else{ //equip='B'
+		var deg = Math.atan2(movimentB.y,movimentB.x);
+	}
+
+	//var deg = Math.atan2(player.target.y,player.target.x);
 	
 	var nx, ny;
 	nx = (Math.cos(deg)*velocitat) + player.x;
@@ -256,14 +279,15 @@ function movePlayer(player){
 	else{
 		player.y = radius;
 	}
-}
+}*/
 
-function equip(player){
+/*function equip(player){
 	var equip='';
 	var continuar = true;
 	var pos = 0;
 	while(continuar){
-		if(player.id.localCompare(teamA[pos].id)==0){ //Jugador trobat a la Taula de l'equip A
+		var jugadorA = teamA[pos];
+		if(player.id.localeCompare(jugadorA.id)==0){ //Jugador trobat a la Taula de l'equip A
 			equip = 'A';
 		}
 		else{
@@ -273,72 +297,64 @@ function equip(player){
 	
 	pos = 0;
 	while(continuar){
-		if(player.id.localCompare(teamB[pos].id)==0){ //Jugador trobat a la Taula de l'equip B
+		var jugadorB = teamB[pos];
+		if(player.id.localeCompare(jugadorB.id)==0){ //Jugador trobat a la Taula de l'equip B
 			equip = 'B';
 		}
 		else{
 			pos++;
 		}
 	}
-	
+
 	return equip;
-}
+}*/
 
-function afegirMoviment(player){
-
-	if(equip(player) == 'A'){
-		var pos = 0;
-		var continuar = true;
-		while((pos < movimentsA.length) && continuar){
-			if(player.id.localCompare(movimentsA[pos].id)==0){
-				movimentsA[pos].target.x = player.target.x;
-				movimentsA[pos].target.y = player.target.y;
-				continuar = false;
-			}
-			else{
-				pos++;
-			}
-		}
-		
-		if(continuar){
-			var moviment = {
-				id: player.id,
-				target: {
-					x: player.target.x,
-					y: player.target.y
-				}
-			}
-			
-			movimentsA.push(moviment);
-		}
-	}
-	else{ //Equip B
-		var pos = 0;
-		var continuar = true;
-		while((pos < movimentsB.length) && continuar){
-			if(player.id.localCompare(movimentsB[pos].id)==0){
-				movimentsB[pos].target.x = player.target.x;
-				movimentsB[pos].target.y = player.target.y;
-				continuar = false;
-			}
-			else{
-				pos++;
-			}
-		}
-		
-		if(continuar){
-			var moviment = {
-				id: player.id,
-				target: {
-					x: player.target.x,
-					y: player.target.y
-				}
-			}
-			
-			movimentsB.push(moviment);
-		}
+function moveTeam(team){
+	var sumaX, sumaY = 0;
+	
+	for(var i=0;i<team.length;i++){
+		sumaX += team.players[i].target.x;
+		sumaY += team.players[i].target.y;
 	}
 	
+	var target = {
+		x: 0,
+		y: 0
+	};
+
+	target.x = sumaX/team[i];
+	target.y = sumaY/team[i];
+	
+	var deg = Math.atan2(target.y,target.x);
+	
+	var nx, ny;
+	nx = (Math.cos(deg)*velocitat) + team.x;
+	ny = (Math.sin(deg)*velocitat) + team.y;
+	
+	if(nx > radius){
+		if(nx < (width-radius)){
+			team.x = nx;
+		}
+		else{
+			team.x = width-radius;
+		}
+	}
+	else{
+		team.x = radius;
+	}
+	
+	
+	if(ny > radius){
+		if(ny < (height-radius)){
+			team.y = ny;
+		}
+		else{
+			team.y = height-radius;
+		}
+	}
+	else{
+		team.y = radius;
+	}
 	
 }
 
