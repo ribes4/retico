@@ -21,11 +21,12 @@ var player = {
     y: screenHeight / 2,
     screenWidth: screenWidth,
     screenHeight: screenHeight,
-    target: {x: screenWidth / 2, y: screenHeight / 2}
+    target: {x: screenWidth / 2, y: screenHeight / 2},
+    team: 0
 };
 var target = {x: player.x, y: player.y};
 var continuity = true;
-var users =[]
+var teams =[]
 
 var playerConfig = {
     border: 6,

@@ -17,6 +17,10 @@ Game.prototype.handleNetwork = function(socket) {
 
 		socket.emit('gotit', player);
 	});
+
+	socket.on('setTeam', function(teamName){
+		player.team = teamName;	
+	});
 	
 
 	// Handle error.
@@ -36,27 +40,27 @@ Game.prototype.handleNetwork = function(socket) {
 		resize();
 	});
 
-	socket.on('serverTellPlayerMove', function (userData){
-		var playerData;
-		for(var i=0; i < userData.length; i++){
-		console.log("ID"+ userData[i].id);
+	socket.on('serverTellTeamMove', function (teamsData){
+		var teamData;
+		for(var i=0; i < teamsData.length; i++){
+		//console.log("ID"+ userData[i].id);
 			//console.log("typeee: "+typeof(userData[i].id));
-			if(userData[i].id === player.id){
-			playerData = userData[i];
-			i = userData.length;
+			if(teamsData[i].id == player.team){
+			teamData = teamsData[i];
+			i = teamsData.length;
 			}
 		}
 		if(playerType == 'player'){
-			var xoffset = player.x - playerData.x;
-			var yoffset = player.y - playerData.y;
+			var xoffset = player.x - teamData.x;
+			var yoffset = player.y - teamData.y;
 
-			player.x = playerData.x;
-			player.y = playerData.y;
-			player.hue = playerData.hue;
+			player.x = teamData.x;
+			player.y = teamData.y;
+			player.hue = teamData.hue;
 			player.xoffset = isNaN(xoffset) ? 0 : xoffset;
 			player.yoffset = isNaN(yoffset) ? 0 : yoffset;
 		}
-		users = userData;
+		teams = teamData;
 	});
 }
 
@@ -73,7 +77,7 @@ Game.prototype.handleGraphics = function() {
 	drawgrid();
 	drawMarge();
 	
-	drawPlayers();
+	drawTeams();
         socket.emit('0', canvas.target); // playerSendTarget "Heartbeat".
 }
 
@@ -145,14 +149,14 @@ function drawMarge(){
 
 }
 
-function drawPlayers() {
+function drawTeams() {
 	var start = {
 		x: player.x - (screenWidth / 2),
 		y: player.y - (screenHeight / 2)
 	};
 
-	for(var z=0; z<users.length; z++){
-		var userCurrent = users[z];
+	for(var z=0; z<teams.length; z++){
+		var teamCurrent = teams[z];
 
 		var x = 0;
 		var y = 0;
@@ -160,8 +164,8 @@ function drawPlayers() {
 		var points = 30;
 		var increase = Math.PI * 2 / points;
 
-		graph.strokeStyle = 'hsl(' + userCurrent.hue + ', 100%, 45%)';
-		graph.fillStyle = 'hsl(' + userCurrent.hue + ', 100%, 50%)';
+		graph.strokeStyle = 'hsl(' + teamCurrent.hue + ', 100%, 45%)';
+		graph.fillStyle = 'hsl(' + teamCurrent.hue + ', 100%, 50%)';
 		graph.lineWidth = playerConfig.border;
 
 		var xstore = [];
@@ -172,14 +176,14 @@ function drawPlayers() {
 		var radius = 50
 
 		var circle = {
-		    x: userCurrent.x - start.x,
-		    y: userCurrent.y - start.y
+		    x: teamCurrent.x - start.x,
+		    y: teamCurrent.y - start.y
 		};
 
 		for (var i = 0; i < points; i++) {
 		    x = radius * Math.cos(spin) + circle.x;
 		    y = radius * Math.sin(spin) + circle.y;
-		    if(userCurrent.id === player.id){
+		    if(teamCurrent.id == player.team){
 			    x = valueInRange(-userCurrent.x + screenWidth / 2,
 				 gameWidth - userCurrent.x + screenWidth / 2, x);
 			    y = valueInRange(-userCurrent.y + screenHeight / 2,
@@ -211,10 +215,10 @@ function drawPlayers() {
 		graph.fill();
 		graph.stroke();
 		var nameCell = "";
-		if(userCurrent.id === player.id)
+		if(teamCurrent.id === player.team)
 		    nameCell = player.name;
 		else
-		    nameCell = userCurrent.name;
+		    nameCell = teamCurrent.name;
 
 		var fontSize = Math.max(radius / 3, 12);
 		graph.lineWidth = playerConfig.textBorderSize;
