@@ -6,29 +6,31 @@ var io = require('socket.io')(http);
 // Import utilities.
 var util = require('./lib/util');
 var users=[];
-var nTeams = 2;
 var sockets = {};
-//var poses=[];
-//var id=1;
 
+var nTeams = 1;
+var width=1000;
+var height=5000;
+var radius=50;
+var velocitat=5;
+var inici = false;
 
 var Equips=[];
 
+
 for(var i=0;i<nTeams;i++){
+	var mq = (width/nTeams);
+	var posX = (i*mq)+(mq/2);
+	var posY = height-(radius*2);
 	var e = {
 		id: i+1,
-		x: 0,
-		y: 0,
+		x: posX,
+		y: posY,
 		players: [],
 		hue: Math.round(Math.random()*360)
 	};
 	Equips.push(e);
 }
-
-var width=1000;
-var height=3000;
-var radius=50;
-var velocitat=5;
 
 
 app.set('port', process.env.PORT || 3000);
@@ -41,7 +43,6 @@ app.get('/', function (req, res) {
 
 
 io.on('connection', function(socket){
-
 	var currentPlayer = {
 		id: socket.id,
 		x: 0,
@@ -146,6 +147,8 @@ io.on('connection', function(socket){
 			currentPlayer.team = Equips[equip].id;
 			Equips[equip].players.push(currentPlayer);
 			
+			mostrar();
+			
 			sockets[player.id].emit('setTeam',currentPlayer.team);
 			
 			/*if(teamA.length > teamB.length){
@@ -214,10 +217,12 @@ io.on('connection', function(socket){
 function mostrar(){
 
 	for(var j=0;j<Equips.length;j++){
-		console.log("\n\n" + Equips[j].id);
-		for(var i=0;i<Equips[j].players[i].length;i++){
-			var jugador = Equips[j].players[i];
-			console.log(jugador.id+": "+jugador.name);
+		console.log("\n\nEquip " + Equips[j].id);
+		if(Equips[j].players.length > 0){
+			for(var i=0;i<Equips[j].players[i].length;i++){
+				var jugador = Equips[j].players[i];
+				console.log(jugador.id+": "+jugador.name);
+			}
 		}
 	}
 }
@@ -229,8 +234,10 @@ function sendUpdate(){
 }
 
 function moveloop(){
-	for(var i=0;i<Equips.length;i++){
-		moveTeam(Equips[i]);
+	if(inici){
+		for(var i=0;i<Equips.length;i++){
+			moveTeam(Equips[i]);
+		}
 	}
 }
 
@@ -310,26 +317,36 @@ function moveloop(){
 }*/
 
 function moveTeam(team){
-	var sumaX, sumaY = 0;
+
+	var sumaX = 0;
+	var sumaY = 0;
 	
-	for(var i=0;i<team.length;i++){
+	console.log("Numero de jugadors: "+team.players.length);
+	console.log("sumaX = "+sumaX+"; sumaY = "+sumaY);
+	
+	for(var i=0;i<team.players.length;i++){
 		sumaX += team.players[i].target.x;
 		sumaY += team.players[i].target.y;
 	}
+	console.log("sumaX = "+sumaX+"; sumaY = "+sumaY);
 	
 	var target = {
 		x: 0,
 		y: 0
 	};
 
-	target.x = sumaX/team[i];
-	target.y = sumaY/team[i];
+	target.x = sumaX/team.players.length;
+	target.y = sumaY/team.players.length;
+
+	console.log("target.x = "+target.x+"; target.y = "+target.y);
 	
 	var deg = Math.atan2(target.y,target.x);
 	
 	var nx, ny;
 	nx = (Math.cos(deg)*velocitat) + team.x;
 	ny = (Math.sin(deg)*velocitat) + team.y;
+	
+	console.log("nx = "+nx+"; ny = "+ny);
 	
 	if(nx > radius){
 		if(nx < (width-radius)){
@@ -355,12 +372,15 @@ function moveTeam(team){
 	else{
 		team.y = radius;
 	}
-	
 }
 
+function comencar(){
+	inici=true;
+}
 
 setInterval(moveloop,1000/60);
 setInterval(sendUpdate,1000/40);
+setInterval(comencar,9000);
 
 http.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
