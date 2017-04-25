@@ -41,26 +41,27 @@ Game.prototype.handleNetwork = function(socket) {
 	});
 
 	socket.on('serverTellTeamMove', function (teamsData){
-		var teamData;
+		var tData;
 		for(var i=0; i < teamsData.length; i++){
 		//console.log("ID"+ userData[i].id);
 			//console.log("typeee: "+typeof(userData[i].id));
 			if(teamsData[i].id == player.team){
-			teamData = teamsData[i];
+			tData = teamsData[i];
+			console.log("x :" + teamsData[i].x + " y: "+ teamsData[i].y);
 			i = teamsData.length;
 			}
 		}
 		if(playerType == 'player'){
-			var xoffset = player.x - teamData.x;
-			var yoffset = player.y - teamData.y;
-
-			player.x = teamData.x;
-			player.y = teamData.y;
-			player.hue = teamData.hue;
+			var xoffset = player.x - tData.x;
+			var yoffset = player.y - tData.y;
+			
+			player.x = tData.x;
+			player.y = tData.y;
+			player.hue = tData.hue;
 			player.xoffset = isNaN(xoffset) ? 0 : xoffset;
 			player.yoffset = isNaN(yoffset) ? 0 : yoffset;
 		}
-		teams = teamData;
+		teams = teamsData;
 	});
 }
 
@@ -181,13 +182,12 @@ function drawTeams() {
 		};
 
 		for (var i = 0; i < points; i++) {
-		    x = radius * Math.cos(spin) + circle.x;
 		    y = radius * Math.sin(spin) + circle.y;
 		    if(teamCurrent.id == player.team){
-			    x = valueInRange(-userCurrent.x + screenWidth / 2,
-				 gameWidth - userCurrent.x + screenWidth / 2, x);
-			    y = valueInRange(-userCurrent.y + screenHeight / 2,
-		 		 gameHeight - userCurrent.y + screenHeight / 2, y);
+			    x = valueInRange(-teamCurrent.x + screenWidth / 2,
+				 gameWidth - teamCurrent.x + screenWidth / 2, x);
+			    y = valueInRange(-teamCurrent.y + screenHeight / 2,
+		 		 gameHeight - teamCurrent.y + screenHeight / 2, y);
 		}
 	  	    /*x = valueInRange(-cellCurrent.x - player.x + screenWidth / 2 + (radius/3),
 				                 gameWidth - cellCurrent.x + gameWidth - player.x + screenWidth / 2 - (radius/3), x);
@@ -215,10 +215,10 @@ function drawTeams() {
 		graph.fill();
 		graph.stroke();
 		var nameCell = "";
-		if(teamCurrent.id === player.team)
-		    nameCell = player.name;
+		if(teamCurrent.id == player.team)
+		    nameCell = player.team;
 		else
-		    nameCell = teamCurrent.name;
+		    nameCell = teamCurrent.id;
 
 		var fontSize = Math.max(radius / 3, 12);
 		graph.lineWidth = playerConfig.textBorderSize;
@@ -231,8 +231,8 @@ function drawTeams() {
 		graph.font = 'bold ' + fontSize + 'px sans-serif';
 
 
-		graph.strokeText(nameCell, circle.x, circle.y);
-		graph.fillText(nameCell, circle.x, circle.y);
+		graph.strokeText("Equip "+nameCell, circle.x, circle.y);
+		graph.fillText("Equip "+nameCell, circle.x, circle.y);
 
 
 
