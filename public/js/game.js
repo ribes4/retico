@@ -182,7 +182,9 @@ function drawTeams() {
 		};
 
 		for (var i = 0; i < points; i++) {
+ 		    x = radius * Math.cos(spin) + circle.x;
 		    y = radius * Math.sin(spin) + circle.y;
+	
 		    if(teamCurrent.id == player.team){
 			    x = valueInRange(-teamCurrent.x + screenWidth / 2,
 				 gameWidth - teamCurrent.x + screenWidth / 2, x);
