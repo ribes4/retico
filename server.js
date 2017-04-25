@@ -8,12 +8,12 @@ var util = require('./lib/util');
 var users=[];
 var sockets = {};
 
-var nTeams = 1;
+var nTeams = 2;
 var width=1000;
 var height=5000;
 var radius=50;
 var velocitat=5;
-var inici = false;
+var moure = false;
 
 var Equips=[];
 
@@ -234,9 +234,11 @@ function sendUpdate(){
 }
 
 function moveloop(){
-	if(inici){
+	if(moure){
 		for(var i=0;i<Equips.length;i++){
-			moveTeam(Equips[i]);
+			if(Equips[i].players.length > 0){
+				moveTeam(Equips[i]);
+			}
 		}
 	}
 }
@@ -321,14 +323,11 @@ function moveTeam(team){
 	var sumaX = 0;
 	var sumaY = 0;
 	
-	console.log("Numero de jugadors: "+team.players.length);
-	console.log("sumaX = "+sumaX+"; sumaY = "+sumaY);
 	
 	for(var i=0;i<team.players.length;i++){
 		sumaX += team.players[i].target.x;
 		sumaY += team.players[i].target.y;
 	}
-	console.log("sumaX = "+sumaX+"; sumaY = "+sumaY);
 	
 	var target = {
 		x: 0,
@@ -338,7 +337,6 @@ function moveTeam(team){
 	target.x = sumaX/team.players.length;
 	target.y = sumaY/team.players.length;
 
-	console.log("target.x = "+target.x+"; target.y = "+target.y);
 	
 	var deg = Math.atan2(target.y,target.x);
 	
@@ -372,15 +370,27 @@ function moveTeam(team){
 	else{
 		team.y = radius;
 	}
+	
+	if(team.y < (radius*2)){
+		finalCursa(team.id);
+	}
 }
 
 function comencar(){
-	inici=true;
+	moure = true;
+}
+
+function finalCursa(idGuanyador){
+	moure = false;
+	
+	users.forEach(function(u){
+		sockets[u.id].emit('finalCursa', idGuanyador);
+	});
 }
 
 setInterval(moveloop,1000/60);
 setInterval(sendUpdate,1000/40);
-setInterval(comencar,9000);
+setInterval(comencar,20000);
 
 http.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
