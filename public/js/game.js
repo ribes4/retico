@@ -47,7 +47,6 @@ Game.prototype.handleNetwork = function(socket) {
 			//console.log("typeee: "+typeof(userData[i].id));
 			if(teamsData[i].id == player.team){
 			tData = teamsData[i];
-			console.log("x :" + teamsData[i].x + " y: "+ teamsData[i].y);
 			i = teamsData.length;
 			}
 		}
@@ -76,6 +75,10 @@ Game.prototype.handleNetwork = function(socket) {
 	socket.on('first', function(){
 		youAreFirst = true;
 	});
+		
+	socket.on('timeToStart', function(timeStart){
+		countdown = timeStart;
+	});
 }
 
 Game.prototype.handleLogic = function() {
@@ -94,28 +97,49 @@ Game.prototype.handleGraphics = function() {
 	
 		drawTeams();
 		socket.emit('0', canvas.target); // playerSendTarget "Heartbeat".
-		if(yourAreFirst){
-			graph.fillStyle = '#2ecc71';
-			graph.strokeStyle = '#27ae60';
-			graph.font = 'bold 50px Verdana';
-			graph.textAlign = 'center';
-			graph.lineWidth = 2;
-			graph.fillText('Waiting players...', screenWidth / 2, screenHeight / 2);
-			graph.strokeText('Waiting players...', screenWidth / 2, screenHeight / 2);
+		if(countdown <= 0){
+			youAreFirst = false;
 		}
+		else{
+			if(youAreFirst){
+				graph.fillStyle = '#2ecc71';
+				graph.strokeStyle = '#27ae60';
+				graph.font = 'bold 50px Verdana';
+				graph.textAlign = 'center';
+				graph.lineWidth = 2;
+				graph.fillText('Waiting players...', screenWidth / 2, screenHeight / 4);
+				graph.strokeText('Waiting players...', screenWidth / 2, screenHeight / 4);
+			}
+			else{
+				graph.fillStyle = '#2ecc71';
+				graph.strokeStyle = '#27ae60';
+				graph.font = 'bold 50px Verdana';
+				graph.textAlign = 'center';
+				graph.lineWidth = 2;
+				graph.fillText('Time to start... '+ countdown, screenWidth / 2, screenHeight / 4);
+				graph.strokeText('Time to start... '+ countdown, screenWidth / 2, screenHeight / 4);	
+			}
+		}
+		
+		
 	}
 	else{
-            graph.fillStyle = '#333333';
+	    graph.fillStyle = '#2ecc71';
+	    graph.strokeStyle = '#27ae60';
             graph.fillRect(0, 0, screenWidth, screenHeight);
 
             graph.textAlign = 'center';
             graph.fillStyle = '#FFFFFF';
-            graph.font = 'bold 30px sans-serif';
+	    graph.font = 'bold 50px Verdana';
+	    graph.textAlign = 'center';
+	    graph.lineWidth = 2;
             if(winner){
-            	graph.fillText('Your team wins!', screenWidth / 2, screenHeight / 2);	
+            	graph.fillText('Your team wins!', screenWidth / 2, screenHeight / 2);
+		graph.strokeText('Your team wins!', screenWidth / 2, screenHeight / 2);	
             }
             else{
-            	graph.fillText('Your team loses!', screenWidth / 2, screenHeight / 2);	
+            	graph.fillText('Your team loses...', screenWidth / 2, screenHeight / 2);
+		graph.strokeText('Your team loses...', screenWidth / 2, screenHeight / 2);	
 	    }
 	}
 }
