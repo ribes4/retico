@@ -29,6 +29,7 @@ var continuity = true;
 var partidaAcabada = false;
 var winner = false;
 var youAreFirst = false;
+var go = true;
 var countdown = 10;
 var teams =[]
 

@@ -77,8 +77,14 @@ Game.prototype.handleNetwork = function(socket) {
 	});
 		
 	socket.on('timeToStart', function(timeStart){
+		youAreFirst = false;
 		countdown = timeStart;
+		console.log("countdown "+countdown);
 	});
+	socket.on('go', function(){
+		go = false;
+	});
+	
 }
 
 Game.prototype.handleLogic = function() {
@@ -98,6 +104,16 @@ Game.prototype.handleGraphics = function() {
 		drawTeams();
 		socket.emit('0', canvas.target); // playerSendTarget "Heartbeat".
 		if(countdown <= 0){
+			if(go){
+				graph.fillStyle = '#2ecc71';
+				graph.strokeStyle = '#27ae60';
+				graph.font = 'bold 50px Verdana';
+				graph.textAlign = 'center';
+				graph.lineWidth = 2;
+				graph.fillText('GO!', screenWidth / 2, screenHeight / 4);
+				graph.strokeText('GO!', screenWidth / 2, screenHeight / 4);
+			}
+				
 			youAreFirst = false;
 		}
 		else{
