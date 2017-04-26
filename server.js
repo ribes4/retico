@@ -6,6 +6,7 @@ var io = require('socket.io')(http);
 // Import utilities.
 var util = require('./lib/util');
 var users=[];
+var llistaEspera=[];
 var sockets = {};
 
 var nTeams = 2;
@@ -13,7 +14,10 @@ var width=1000;
 var height=5000;
 var radius=50;
 var velocitat=5;
-var moure = false;
+var enjoc = false;
+var partidaAcabada = false;
+var restaurat = false;
+var compteEnrere = false;
 
 var Equips=[];
 
@@ -110,13 +114,6 @@ io.on('connection', function(socket){
 	});*/
 
 
-	socket.on('0', function(target) {
-		currentPlayer.lastHeartbeat = new Date().getTime();
-		if (target.x !== currentPlayer.x || target.y !== currentPlayer.y) {
-			currentPlayer.target = target;
-		}
-	});
-
 	socket.on('gotit', function(player){
 		console.log('[INFO] Player ' + player.name + ' connecting!');
 		if (util.findIndex(users, player.id) > -1) {
@@ -135,9 +132,12 @@ io.on('connection', function(socket){
 		    	currentPlayer.lastHeartbeat = new Date().getTime();
 		    	users.push(currentPlayer);
 
-			//assigna el jugador al equip amb menys jugadors
 			
-			var equip=0;
+			//assigna el jugador al equip amb menys jugadors
+			assignarEquip(currentPlayer);
+
+			
+			/*var equip=0;
 			for(var i=0;i<Equips.length;i++){
 				if(Equips[equip].players.length > Equips[i].players.length){
 					equip = i;
@@ -149,7 +149,7 @@ io.on('connection', function(socket){
 			
 			mostrar();
 			
-			sockets[player.id].emit('setTeam',currentPlayer.team);
+			sockets[player.id].emit('setTeam',currentPlayer.team);*/
 			
 			/*if(teamA.length > teamB.length){
 				teamB.push(currentPlayer);
@@ -180,7 +180,6 @@ io.on('connection', function(socket){
 			console.log('Total players: ' + users.length);
 		}
 	});
-	
 	
 	socket.on('windowResized', function (data) {
 		currentPlayer.screenWidth = data.screenWidth;
@@ -214,6 +213,22 @@ io.on('connection', function(socket){
 	});
 });
 
+function assignarEquip(player){
+	var equip=0;
+	for(var i=0;i<Equips.length;i++){
+		if(Equips[equip].players.length > Equips[i].players.length){
+			equip = i;
+		}
+	}
+	
+	player.team = Equips[equip].id;
+	Equips[equip].players.push(player);
+	
+	sockets[player.id].emit('setTeam',player.team);
+	
+	mostrar();
+}
+
 function mostrar(){
 
 	for(var j=0;j<Equips.length;j++){
@@ -234,13 +249,46 @@ function sendUpdate(){
 }
 
 function moveloop(){
-	if(moure){
+	if(enjoc){
 		for(var i=0;i<Equips.length;i++){
 			if(Equips[i].players.length > 0){
 				moveTeam(Equips[i]);
 			}
 		}
 	}
+	else{
+		if(partidaAcabada){
+			restaurat = false;
+		}
+		else{//partida per començar. Esperant jugadors
+			if(!restaurat){
+				for(var i=0;i<Equips.length;i++){
+					Equips[i].x = posX;
+					Equips[i].y = posY;
+				}
+				restaurat = true;
+			}
+			
+			if(!hiHaSuficientsJugadors()){
+				users.forEach(function(u){
+					sockets[u.id].emit('first');
+				});
+			}			
+			else{
+				enjoc = true;
+			}
+			
+		}
+	}
+}
+
+function hiHaSuficientsJugadors(){
+	for(var i=0;i<Equips.length;i++){
+		if(Equips[i].players.length == 0){
+			return false;
+		}
+	}
+	return true;
 }
 
 /*function movePlayer(player){
@@ -376,21 +424,20 @@ function moveTeam(team){
 	}
 }
 
-function comencar(){
-	moure = true;
-}
 
 function finalCursa(idGuanyador){
-	moure = false;
+	enjoc = false;
+	partidaAcabada = false;
 	
 	users.forEach(function(u){
 		sockets[u.id].emit('finalCursa', idGuanyador);
 	});
+	
+	
 }
 
 setInterval(moveloop,1000/60);
 setInterval(sendUpdate,1000/40);
-setInterval(comencar,20000);
 
 http.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
