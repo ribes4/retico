@@ -63,6 +63,19 @@ Game.prototype.handleNetwork = function(socket) {
 		}
 		teams = teamsData;
 	});
+
+	socket.on('finalCursa', function(idGuanyador){
+		partidaAcabada = true;
+		if(idGuanyador == player.team){
+			winner = true;
+		}
+		else
+			winner = false;
+	});
+	
+	socket.on('first', function(){
+		youAreFirst = true;
+	});
 }
 
 Game.prototype.handleLogic = function() {
@@ -71,15 +84,40 @@ Game.prototype.handleLogic = function() {
 }
 
 Game.prototype.handleGraphics = function() {
-	// This is where you draw everything
-	graph.fillStyle = '#fbfcfc';
-	graph.fillRect(0, 0, screenWidth, screenHeight);
+	if(!partidaAcabada){
+		// This is where you draw everything
+		graph.fillStyle = '#fbfcfc';
+		graph.fillRect(0, 0, screenWidth, screenHeight);
 	
-	drawgrid();
-	drawMarge();
+		drawgrid();
+		drawMarge();
 	
-	drawTeams();
-        socket.emit('0', canvas.target); // playerSendTarget "Heartbeat".
+		drawTeams();
+		socket.emit('0', canvas.target); // playerSendTarget "Heartbeat".
+		if(yourAreFirst){
+			graph.fillStyle = '#2ecc71';
+			graph.strokeStyle = '#27ae60';
+			graph.font = 'bold 50px Verdana';
+			graph.textAlign = 'center';
+			graph.lineWidth = 2;
+			graph.fillText('Waiting players...', screenWidth / 2, screenHeight / 2);
+			graph.strokeText('Waiting players...', screenWidth / 2, screenHeight / 2);
+		}
+	}
+	else{
+            graph.fillStyle = '#333333';
+            graph.fillRect(0, 0, screenWidth, screenHeight);
+
+            graph.textAlign = 'center';
+            graph.fillStyle = '#FFFFFF';
+            graph.font = 'bold 30px sans-serif';
+            if(winner){
+            	graph.fillText('Your team wins!', screenWidth / 2, screenHeight / 2);	
+            }
+            else{
+            	graph.fillText('Your team loses!', screenWidth / 2, screenHeight / 2);	
+	    }
+	}
 }
 
 //construeix la graella del fons
