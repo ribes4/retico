@@ -26,6 +26,9 @@ var player = {
 };
 var target = {x: player.x, y: player.y};
 var continuity = true;
+var partidaAcabada = false;
+var winner = false;
+var youAreFirst = false;
 var teams =[]
 
 var playerConfig = {
