@@ -266,6 +266,7 @@ function moveloop(){
 		else{//partida per començar. Esperant jugadors
 			if(!restaurat){
 				for(var i=0;i<Equips.length;i++){
+					posX = (i*mq)+(mq/2);
 					Equips[i].x = posX;
 					Equips[i].y = posY;
 				}
@@ -295,7 +296,7 @@ function moveloop(){
 							temps = 0;
 						}
 						users.forEach(function(u){
-							sockets[u.id].emit('go',temps);
+							sockets[u.id].emit('timeToStart',temps);
 						});
 					}
 				}
