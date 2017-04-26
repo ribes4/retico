@@ -10,6 +10,8 @@ var llistaEspera=[];
 var sockets = {};
 
 var nTeams = 2;
+var tempsIniciPartida = 10;
+var tempsFinalPartida = 10;
 var width=1000;
 var height=5000;
 var radius=50;
@@ -18,6 +20,7 @@ var enjoc = false;
 var partidaAcabada = false;
 var restaurat = false;
 var compteEnrere = false;
+var momentActualInici = 0;
 
 var Equips=[];
 
@@ -275,7 +278,27 @@ function moveloop(){
 				});
 			}			
 			else{
-				enjoc = true;
+				if(!compteEnrere){
+					momentActualInici = new Date().getTime();
+					compteEnrere = true;
+				}
+				else{
+					var tactual = new Date().getTime();
+					var timeToStart = tempsIniciPartida-((tactual - momentActualInici)/1000);
+					if(timeToStart < 0){
+						compteEnrere = false;
+						enjoc = true;
+					}
+					else{
+						var temps = parseInt(timeToStart);
+						if(temps < 0){
+							temps = 0;
+						}
+						users.forEach(function(u){
+							sockets[u.id].emit('go',temps);
+						});
+					}
+				}
 			}
 			
 		}
