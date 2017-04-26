@@ -289,6 +289,10 @@ function moveloop(){
 					if(timeToStart < 0){
 						compteEnrere = false;
 						enjoc = true;
+						
+						users.forEach(function(u){
+							sockets[u.id].emit('go');
+						});
 					}
 					else{
 						var temps = parseInt(timeToStart);
@@ -415,9 +419,7 @@ function moveTeam(team){
 	var nx, ny;
 	nx = (Math.cos(deg)*velocitat) + team.x;
 	ny = (Math.sin(deg)*velocitat) + team.y;
-	
-	console.log("nx = "+nx+"; ny = "+ny);
-	
+		
 	if(nx > radius){
 		if(nx < (width-radius)){
 			team.x = nx;
