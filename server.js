@@ -6,7 +6,6 @@ var io = require('socket.io')(http);
 // Import utilities.
 var util = require('./lib/util');
 var users=[];
-var llistaEspera=[];
 var sockets = {};
 
 var nTeams = 2;
@@ -20,10 +19,15 @@ var enjoc = false;
 var partidaAcabada = false;
 var restaurat = false;
 var compteEnrere = false;
-var momentActualInici = 0;
+var esperaFinal = false;
+var momentActualInici;
+var momentActualFinal;
+
+var degMin = 0;
+var degMax = 0;
 
 var Equips=[];
-
+var llistaEspera=[];
 
 for(var i=0;i<nTeams;i++){
 	var mq = (width/nTeams);
@@ -60,7 +64,8 @@ io.on('connection', function(socket){
 		    x: 0,
 		    y: 0
 		},
-		team: 0
+		team: 0,
+		jugant: true
 	};	
 
 
@@ -132,13 +137,17 @@ io.on('connection', function(socket){
 			player.target.x = 0;
 			player.target.y = 0;
 			currentPlayer = player;
-		    	currentPlayer.lastHeartbeat = new Date().getTime();
-		    	users.push(currentPlayer);
+		    currentPlayer.lastHeartbeat = new Date().getTime();
+		    users.push(currentPlayer);
 
 			
 			//assigna el jugador al equip amb menys jugadors
-			assignarEquip(currentPlayer);
-
+			if(enjoc){
+				llistaEspera.push(currentPlayer);
+			}
+			else{
+				assignarEquip(currentPlayer);
+			}
 			
 			/*var equip=0;
 			for(var i=0;i<Equips.length;i++){
@@ -262,14 +271,28 @@ function moveloop(){
 	else{
 		if(partidaAcabada){
 			restaurat = false;
+			
+			if(!esperaFinal){
+				momentActualFinal = new Date().getTime();
+				esperaFinal = true;
+			}
+			else{
+				var tactual = new Date().getTime();
+				var timeFinal = tempsFinalPartida - ((tactual - momentActualFinal)/1000);
+				
+				if(timeFinal < 0){
+					users.forEach(function(u){
+						sockets[u.id].emit('restartGame',temps);
+					});
+					esperaFinal = false;
+					partidaAcabada = false;
+				}
+			}
+						
 		}
 		else{//partida per començar. Esperant jugadors
 			if(!restaurat){
-				for(var i=0;i<Equips.length;i++){
-					posX = (i*mq)+(mq/2);
-					Equips[i].x = posX;
-					Equips[i].y = posY;
-				}
+				restaurarPartida();
 				restaurat = true;
 			}
 			
@@ -285,7 +308,7 @@ function moveloop(){
 				}
 				else{
 					var tactual = new Date().getTime();
-					var timeToStart = tempsIniciPartida-((tactual - momentActualInici)/1000);
+					var timeToStart = tempsIniciPartida - ((tactual - momentActualInici)/1000);
 					if(timeToStart < 0){
 						compteEnrere = false;
 						enjoc = true;
@@ -317,6 +340,20 @@ function hiHaSuficientsJugadors(){
 		}
 	}
 	return true;
+}
+
+function restaurarPartida(){
+	
+	for(var i=0;i<Equips.length;i++){
+		posX = (i*mq)+(mq/2);
+		Equips[i].x = posX;
+		Equips[i].y = posY;
+	}
+	
+	while(llistaEspera.length > 0){
+		var player = llistaEspera.pop();
+		assignarEquip(player);
+	}
 }
 
 /*function movePlayer(player){
@@ -396,7 +433,7 @@ function hiHaSuficientsJugadors(){
 
 function moveTeam(team){
 
-	var sumaX = 0;
+	/*var sumaX = 0;
 	var sumaY = 0;
 	
 	
@@ -415,7 +452,24 @@ function moveTeam(team){
 
 	
 	var deg = Math.atan2(target.y,target.x);
+
+	}*/
+
+	var dist = 0;
+	var deg = 0;
+	for(var i = 0;i<team.players.length;i++){
+		deg += Math.atan2(team.players[i].target.y,team.players[i].target.x);
+	}
+
+	/*if(deg < degMin){
+		degMin = deg;
+	}
+	if(deg > degMax){
+		degMax = deg;
+	}
 	
+	console.log("min: "+degMin+", max: "+degMax);
+	*/
 	var nx, ny;
 	nx = (Math.cos(deg)*velocitat) + team.x;
 	ny = (Math.sin(deg)*velocitat) + team.y;
@@ -453,7 +507,7 @@ function moveTeam(team){
 
 function finalCursa(idGuanyador){
 	enjoc = false;
-	partidaAcabada = false;
+	partidaAcabada = true;
 	
 	users.forEach(function(u){
 		sockets[u.id].emit('finalCursa', idGuanyador);
