@@ -11,8 +11,8 @@ var sockets = {};
 var nTeams = 2;
 var tempsIniciPartida = 10;
 var tempsFinalPartida = 10;
-var width=1000;
-var height=2000;
+var width=2000;
+var height=5000;
 var radius=50;
 var velocitat=5;
 var enjoc = false;
@@ -28,6 +28,35 @@ var degMax = 0;
 
 var Equips=[];
 var llistaEspera=[];
+var obstacles=[];
+
+var obstacle1 = {
+	pos: {
+		x: 0,
+		y: 4000
+	},
+	x: 300,
+	y: 50
+}
+var obstacle2 = {
+	pos: {
+		x: 1000,
+		y: 3000
+	},
+	x: 900,
+	y: 100
+}
+var obstacle3 = {
+	pos: {
+		x: 500,
+		y: 100
+	},
+	x: 100,
+	y: 100
+}
+obstacles.push(obstacle1);
+obstacles.push(obstacle2);
+obstacles.push(obstacle3);
 
 for(var i=0;i<nTeams;i++){
 	var mq = (width/nTeams);
@@ -42,7 +71,6 @@ for(var i=0;i<nTeams;i++){
 	};
 	Equips.push(e);
 }
-
 
 app.set('port', process.env.PORT || 3000);
 
@@ -132,8 +160,8 @@ io.on('connection', function(socket){
 			console.log('[INFO] Player ' + player.name + ' connected!');
 			sockets[player.id] = socket;
 
-			player.x = height/2;
-			player.y = width/2;
+			player.x = 0;
+			player.y = 0;
 			player.target.x = 0;
 			player.target.y = 0;
 			currentPlayer = player;
@@ -188,7 +216,7 @@ io.on('connection', function(socket){
 			socket.emit('gameSetup', {
 				gameWidth: width,
 				gameHeight: height
-			});
+			},obstacles);
 
 			console.log('Total players: ' + users.length);
 		}
