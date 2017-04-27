@@ -12,7 +12,7 @@ var nTeams = 2;
 var tempsIniciPartida = 10;
 var tempsFinalPartida = 10;
 var width=1000;
-var height=5000;
+var height=2000;
 var radius=50;
 var velocitat=5;
 var enjoc = false;
@@ -152,6 +152,7 @@ io.on('connection', function(socket){
 			/*var equip=0;
 			for(var i=0;i<Equips.length;i++){
 				if(Equips[equip].players.length > Equips[i].players.length){
+				if(Equips[equip].players.length > Equips[i].players.length){
 					equip = i;
 				}
 			}
@@ -282,7 +283,7 @@ function moveloop(){
 				
 				if(timeFinal < 0){
 					users.forEach(function(u){
-						sockets[u.id].emit('restartGame',temps);
+						sockets[u.id].emit('restartGame');
 					});
 					esperaFinal = false;
 					partidaAcabada = false;
@@ -433,7 +434,7 @@ function restaurarPartida(){
 
 function moveTeam(team){
 
-	/*var sumaX = 0;
+	var sumaX = 0;
 	var sumaY = 0;
 	
 	
@@ -453,23 +454,7 @@ function moveTeam(team){
 	
 	var deg = Math.atan2(target.y,target.x);
 
-	}*/
-
-	var dist = 0;
-	var deg = 0;
-	for(var i = 0;i<team.players.length;i++){
-		deg += Math.atan2(team.players[i].target.y,team.players[i].target.x);
-	}
-
-	/*if(deg < degMin){
-		degMin = deg;
-	}
-	if(deg > degMax){
-		degMax = deg;
-	}
-	
-	console.log("min: "+degMin+", max: "+degMax);
-	*/
+		
 	var nx, ny;
 	nx = (Math.cos(deg)*velocitat) + team.x;
 	ny = (Math.sin(deg)*velocitat) + team.y;
