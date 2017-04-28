@@ -84,6 +84,10 @@ Game.prototype.handleNetwork = function(socket) {
 	socket.on('go', function(){
 		go = false;
 	});
+
+	socket.on('restartGame', function(){
+		partidaAcabada = false;
+	});
 	
 }
 
