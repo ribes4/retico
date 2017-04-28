@@ -34,9 +34,13 @@ Game.prototype.handleNetwork = function(socket) {
 		//disconnected = true;
 	});
 
-	socket.on('gameSetup', function(data) {
+	socket.on('gameSetup', function(data, obs) {
 		gameWidth = data.gameWidth;
 		gameHeight = data.gameHeight;
+		for(var i=0; i< obs.length;i++){
+			obstacles.push(obs[i]);	
+		}
+
 		resize();
 	});
 
@@ -104,6 +108,7 @@ Game.prototype.handleGraphics = function() {
 	
 		drawgrid();
 		drawMarge();
+		drawObstacles();
 	
 		drawTeams();
 		socket.emit('0', canvas.target); // playerSendTarget "Heartbeat".
@@ -228,6 +233,42 @@ function drawMarge(){
 		gameHeight + screenHeight/2 - player.y);
 		graph.strokeStyle = lineColor;
 		graph.stroke();
+	}
+
+}
+
+function drawObstacles(){
+	var lineColor = '#000000';
+	graph.lineWidth = 1;
+	graph.strokeStyle = playerConfig.borderColor;
+
+	for(var i=0;i<obstacles.length;i++){
+
+		graph.beginPath();
+		graph.moveTo(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2- player.y);
+		graph.lineTo(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y + obstacles[i].y +screenHeight/2- player.y);
+		graph.strokeStyle = lineColor;
+		graph.stroke();
+		
+
+		graph.beginPath();
+		graph.moveTo(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y + obstacles[i].y +screenHeight/2- player.y);+
+		graph.lineTo(obstacles[i].pos.x + obstacles[i].x +screenWidth/2 - player.x, obstacles[i].pos.y + obstacles[i].y +screenHeight/2- player.y);
+		graph.strokeStyle = lineColor;
+		graph.stroke();
+
+		graph.beginPath();
+		graph.moveTo(obstacles[i].pos.x + obstacles[i].x +screenWidth/2 - player.x, obstacles[i].pos.y + obstacles[i].y +screenHeight/2- player.y);
+		graph.lineTo(obstacles[i].pos.x + obstacles[i].x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2- player.y);
+		graph.strokeStyle = lineColor;
+		graph.stroke();
+
+		graph.beginPath();
+		graph.moveTo(obstacles[i].pos.x + obstacles[i].x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2- player.y);
+		graph.lineTo(obstacles[i].pos.x - player.x, obstacles[i].pos.y +screenWidth/2 +screenHeight/2- player.y );
+		graph.strokeStyle = lineColor;
+		graph.stroke();
+		
 	}
 
 }
