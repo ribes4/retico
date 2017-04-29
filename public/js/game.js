@@ -238,12 +238,12 @@ function drawMarge(){
 }
 
 function drawObstacles(){
-	var lineColor = '#000000';
+	//var lineColor = '#000000';
 	graph.lineWidth = 1;
 	graph.strokeStyle = playerConfig.borderColor;
 
 	for(var i=0;i<obstacles.length;i++){
-	
+		/*
 		//linia esquerra
 		graph.beginPath();
 		graph.moveTo(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2- player.y);
@@ -270,7 +270,11 @@ function drawObstacles(){
 		graph.moveTo(obstacles[i].pos.x + obstacles[i].x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2- player.y);
 		graph.lineTo(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2 - player.y );
 		graph.strokeStyle = lineColor;
-		graph.stroke();
+		graph.stroke();*/
+	    
+	    graph.fillStyle = '#422910';
+	    graph.strokeStyle = '#000000';
+            graph.fillRect(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2- player.y, obstacles[i].x, obstacles[i].y);
 		
 	}
 
