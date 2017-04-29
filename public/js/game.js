@@ -13,7 +13,7 @@ Game.prototype.handleNetwork = function(socket) {
 		player.screenWidth = screenWidth;
 		player.screenHeight = screenHeight;
 		player.target = canvas.target;
-		alert("La teva id: "+ player.id + " i el teu nick: "+ playerName);
+		//alert("La teva id: "+ player.id + " i el teu nick: "+ playerName);
 
 		socket.emit('gotit', player);
 	});
