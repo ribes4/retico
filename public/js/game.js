@@ -175,6 +175,10 @@ Game.prototype.handleGraphics = function() {
             	graph.fillText('Your team wins!', screenWidth / 2, screenHeight / 2);
 		graph.strokeText('Your team wins!', screenWidth / 2, screenHeight / 2);	
             }
+            else if(waitingNextGame){
+		graph.fillText('Waiting for the next game', screenWidth / 2, screenHeight / 2);
+		graph.strokeText('Waiting for the next game', screenWidth / 2, screenHeight / 2);
+            }
             else{
             	graph.fillText('Your team loses...', screenWidth / 2, screenHeight / 2);
 		graph.strokeText('Your team loses...', screenWidth / 2, screenHeight / 2);	
