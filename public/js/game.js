@@ -37,6 +37,7 @@ Game.prototype.handleNetwork = function(socket) {
 	socket.on('gameSetup', function(data, obs) {
 		gameWidth = data.gameWidth;
 		gameHeight = data.gameHeight;
+		obstacles = [];
 		for(var i=0; i< obs.length;i++){
 			obstacles.push(obs[i]);	
 		}

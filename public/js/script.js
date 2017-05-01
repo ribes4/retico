@@ -8,7 +8,7 @@ var screenHeight = window.innerHeight;
 
 var gameWidth;
 var gameHeight;
-var obstacles = []
+var obstacles = [];
 
 var KEY_ENTER = 13;
 var KEY_LEFT= 37;
