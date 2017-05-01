@@ -54,15 +54,17 @@ Game.prototype.handleNetwork = function(socket) {
 			i = teamsData.length;
 			}
 		}
-		if(playerType == 'player'){
-			var xoffset = player.x - tData.x;
-			var yoffset = player.y - tData.y;
+		if(tData != null){
+			if(playerType == 'player'){
+				var xoffset = player.x - tData.x;
+				var yoffset = player.y - tData.y;
 			
-			player.x = tData.x;
-			player.y = tData.y;
-			player.hue = tData.hue;
-			player.xoffset = isNaN(xoffset) ? 0 : xoffset;
-			player.yoffset = isNaN(yoffset) ? 0 : yoffset;
+				player.x = tData.x;
+				player.y = tData.y;
+				player.hue = tData.hue;
+				player.xoffset = isNaN(xoffset) ? 0 : xoffset;
+				player.yoffset = isNaN(yoffset) ? 0 : yoffset;
+			}
 		}
 		teams = teamsData;
 	});
@@ -81,6 +83,7 @@ Game.prototype.handleNetwork = function(socket) {
 	});
 		
 	socket.on('timeToStart', function(timeStart){
+		waitingNextGame = false;
 		youAreFirst = false;
 		countdown = timeStart;
 	});
@@ -89,6 +92,7 @@ Game.prototype.handleNetwork = function(socket) {
 	});
 
 	socket.on('restartGame', function(){
+		waitingNextGame = false;
 		partidaAcabada = false;
 	});
 	
@@ -130,7 +134,21 @@ Game.prototype.handleGraphics = function() {
 				graph.fillText('Waiting players...', screenWidth / 2, screenHeight / 4);
 				graph.strokeText('Waiting players...', screenWidth / 2, screenHeight / 4);
 			}
+			else if(waitingNextGame){
+				graph.fillStyle = '#2ecc71';
+				graph.strokeStyle = '#27ae60';
+				graph.fillRect(0, 0, screenWidth, screenHeight);
+
+				graph.textAlign = 'center';
+				graph.fillStyle = '#FFFFFF';
+				graph.font = 'bold 50px Verdana';
+				graph.textAlign = 'center';
+				graph.lineWidth = 2;
+				graph.fillText('Waiting for the next game', screenWidth / 2, screenHeight / 2);
+				graph.strokeText('Waiting for the next game', screenWidth / 2, screenHeight / 2);		
+			}
 			else{
+
 				graph.fillStyle = '#2ecc71';
 				graph.strokeStyle = '#27ae60';
 				graph.font = 'bold 50px Verdana';
