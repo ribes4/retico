@@ -486,35 +486,79 @@ function moveTeam(team){
 	var nx, ny;
 	nx = (Math.cos(deg)*velocitat) + team.x;
 	ny = (Math.sin(deg)*velocitat) + team.y;
-		
-	if(nx > radius){
-		if(nx < (width-radius)){
-			team.x = nx;
+	
+	var collision = false;	
+
+		if(nx > radius){
+			if(nx < (width-radius)){
+				var coli = obstacleCollision(nx,ny);
+				if (!coli.bool){
+
+					team.x = nx;
+				}
+				else{
+					collision = true;
+				}
+				
+			}
+			else{
+				team.x = width-radius;
+			}
 		}
 		else{
-			team.x = width-radius;
+			team.x = radius;
 		}
-	}
-	else{
-		team.x = radius;
-	}
 	
 	
-	if(ny > radius){
-		if(ny < (height-radius)){
-			team.y = ny;
+		if(ny > radius){
+			if(ny < (height-radius)){
+				var coli = obstacleCollision(nx,ny);
+				if (!coli.bool){
+					team.y = ny;
+				}
+				else{
+					var pose = coli.pose;
+					if(collision
+					   && ((nx < obstacles[pose].pos.x && (ny <obstacles[pose].pos.y || ny >  (obstacles[pose].pos.y + obstacles[pose].y))) 
+					   	|| (nx > (obstacles[pose].pos.x + obstacles[pose].x) && (ny < obstacles[pose].pos.y || ny > (obstacles[pose].pos.y + obstacles[pose].y))))){
+					   	if(team.x+radius < obstacles[pose].pos.x){
+					   		team.y = ny;
+					   	}
+					   	else if(team.x-radius > obstacles[pose].pos.x + obstacles[pose].x ){
+					   		team.y = ny;
+					   	}
+					   	else if(team.y+radius < obstacles[pose].pos.y){
+					   		team.x = nx;
+					   	}
+					   	else if(team.y-radius > obstacles[pose].pos.y + obstacles[pose].y ){
+					   		team.x = nx;
+					   	}
+
+					}
+					else{
+						if(collision &&( nx < obstacles[pose].pos.x || nx > (obstacles[pose].pos.x + obstacles[pose].x))){
+							team.y = ny; 
+						}
+				
+						if(collision && (ny < obstacles[pose].pos.y || ny > (obstacles[pose].pos.y + obstacles[pose].y))){
+							team.x = nx;
+						}
+					}
+					
+				}
+			}
+			else{
+				team.y = height-radius;
+			}
 		}
 		else{
-			team.y = height-radius;
+			team.y = radius;
 		}
-	}
-	else{
-		team.y = radius;
-	}
 	
-	if(team.y < (radius*2)){
-		finalCursa(team.id);
-	}
+		if(team.y < (radius*2)){
+			finalCursa(team.id);
+		}
+	
 }
 
 
@@ -527,6 +571,20 @@ function finalCursa(idGuanyador){
 	});
 	
 	
+}
+
+function obstacleCollision(nx, ny){
+	var collision = {
+		bool: false,
+		pose: 0
+	}
+	for(var i =0; i< obstacles.length; i++){
+		if( nx+radius > obstacles[i].pos.x && nx-radius < (obstacles[i].pos.x + obstacles[i].x) && ny+radius > obstacles[i].pos.y && ny-radius < (obstacles[i].pos.y + obstacles[i].y)){
+			collision.bool = true;
+			collision.pose = i;
+		}
+	}
+	return collision;
 }
 
 setInterval(moveloop,1000/60);
