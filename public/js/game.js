@@ -83,7 +83,6 @@ Game.prototype.handleNetwork = function(socket) {
 	socket.on('timeToStart', function(timeStart){
 		youAreFirst = false;
 		countdown = timeStart;
-		console.log("countdown "+countdown);
 	});
 	socket.on('go', function(){
 		go = false;
@@ -95,11 +94,6 @@ Game.prototype.handleNetwork = function(socket) {
 	
 }
 
-Game.prototype.handleLogic = function() {
-  console.log('Game is running');
-  // This is where you update your game logic
-}
-
 Game.prototype.handleGraphics = function() {
 	if(!partidaAcabada){
 		// This is where you draw everything
@@ -109,6 +103,7 @@ Game.prototype.handleGraphics = function() {
 		drawgrid();
 		drawMarge();
 		drawObstacles();
+		drawMeta();
 	
 		drawTeams();
 		socket.emit('0', canvas.target); // playerSendTarget "Heartbeat".
@@ -304,7 +299,6 @@ function drawTeams() {
 
 
 		spin +=0.0;
-		var radius = 50
 
 		var circle = {
 		    x: teamCurrent.x - start.x,
@@ -372,6 +366,26 @@ function drawTeams() {
 	
 	//....
 	
+}
+
+function drawMeta(){
+	var lineColor = '#000000';
+	graph.lineWidth = 1;
+	graph.strokeStyle = playerConfig.borderColor;
+	graph.beginPath();
+	graph.moveTo(0 +screenWidth/2 - player.x, radius*2 +screenHeight/2- player.y);
+	graph.lineTo(gameWidth +screenWidth/2 - player.x, radius*2 +screenHeight/2- player.y);
+	graph.strokeStyle = lineColor;
+	graph.stroke();
+
+	graph.fillStyle = '#bbbbbb';
+	graph.strokeStyle = '#lelele';
+	graph.font = 'bold 50px Verdana';
+	graph.textAlign = 'center';
+	graph.lineWidth = 2;
+	graph.fillText('FINISH', gameWidth/2 +screenWidth/2 - player.x, radius +screenHeight/2- player.y);
+	graph.strokeText('FINISH', gameWidth/2 +screenWidth/2 - player.x, radius +screenHeight/2- player.y);
+
 }
 
 function valueInRange(min, max, value) {

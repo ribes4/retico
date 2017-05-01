@@ -33,7 +33,8 @@ var winner = false;
 var youAreFirst = false;
 var go = true;
 var countdown = 10;
-var teams =[]
+var teams =[];
+var radius = 50;
 
 var playerConfig = {
     border: 6,
@@ -117,7 +118,6 @@ function animloop(){
 }
 
 function gameLoop() {
-  game.handleLogic();
   game.handleGraphics();
 }
 
