@@ -9,7 +9,7 @@ var users=[];
 var sockets = {};
 
 var nTeams = 1;
-var tempsIniciPartida = 1;
+var tempsIniciPartida = 10;
 var tempsFinalPartida = 10;
 var width=1500;
 var height=5000;
@@ -390,6 +390,8 @@ function restaurarPartida(){
 	while(obstacles.length > 0){
 		var xx = obstacles.pop();
 	}
+	
+	crearObstacles();
 }
 
 /*function movePlayer(player){
@@ -600,7 +602,9 @@ function crearObstacles(){
 	var posX = [(mq/2),(mq+(mq/2)),((2*mq)+(mq/2))];
 
 	var n = (height - (radius * 4)) / 10;
-	var posActual = height - (radius * 8);
+	var posActual = height - (radius * 15);
+	
+	var ultimaMida = 0;
 	
 	while(posActual > (radius * 4)){
 		var mida = Math.floor((Math.random() * 3) + 1);
@@ -609,6 +613,11 @@ function crearObstacles(){
 		if((posActual - (midaY/2)) <= (radius * 8)){
 			mida = 3;
 		}
+		
+		if(ultimaMida == 1){
+			mida = 3;
+		}
+
 		var midaX = mq/mida;
 		var midaY = n/mida;
 				
@@ -622,16 +631,16 @@ function crearObstacles(){
 		};
 		
 		obstacles.push(obj);
-		console.log(posX.length);
+
 		if(((pos == 0) || (pos == 2)) && (mida == 3)){
 			if(pos == 0){
 				pos = 2;
 			}
 			else{ //pos == 2
-				pos = 1;
+				pos = 0;
 			}
 			
-			obj = {
+			var obj2 = {
 				pos: {
 					x: (posX[pos] - (midaX/2)),
 					y: (posActual - (midaY/2))
@@ -640,8 +649,10 @@ function crearObstacles(){
 				y: midaY
 			};
 			
-			obstacles.push(obj);
+			obstacles.push(obj2);
 		}
+		
+		ultimaMida = mida;
 		
 		posActual -= n;			
 	}
