@@ -8,13 +8,14 @@ var util = require('./lib/util');
 var users=[];
 var sockets = {};
 
-var nTeams = 2;
-var tempsIniciPartida = 10;
+var nTeams = 1;
+var tempsIniciPartida = 1;
 var tempsFinalPartida = 10;
-var width=2000;
+var width=1500;
 var height=5000;
 var radius=50;
 var velocitat=5;
+
 var enjoc = false;
 var partidaAcabada = false;
 var restaurat = false;
@@ -23,14 +24,11 @@ var esperaFinal = false;
 var momentActualInici;
 var momentActualFinal;
 
-var degMin = 0;
-var degMax = 0;
-
 var Equips=[];
 var llistaEspera=[];
 var obstacles=[];
 
-var obstacle1 = {
+/*var obstacle1 = {
 	pos: {
 		x: 0,
 		y: 4000
@@ -56,7 +54,7 @@ var obstacle3 = {
 }
 obstacles.push(obstacle1);
 obstacles.push(obstacle2);
-obstacles.push(obstacle3);
+obstacles.push(obstacle3);*/
 
 for(var i=0;i<nTeams;i++){
 	var mq = (width/nTeams);
@@ -171,9 +169,11 @@ io.on('connection', function(socket){
 			
 			//assigna el jugador al equip amb menys jugadors
 			if(enjoc){
+				currentPlayer.jugant = false;
 				llistaEspera.push(currentPlayer);
 			}
 			else{
+				currentPlayer.jugant = true;
 				assignarEquip(currentPlayer);
 			}
 			
@@ -213,6 +213,8 @@ io.on('connection', function(socket){
 			}*/
 		    	
 		    	
+			crearObstacles();	
+				
 			socket.emit('gameSetup', {
 				gameWidth: width,
 				gameHeight: height
@@ -381,7 +383,12 @@ function restaurarPartida(){
 	
 	while(llistaEspera.length > 0){
 		var player = llistaEspera.pop();
+		player.jugant = true;
 		assignarEquip(player);
+	}
+	
+	while(obstacles.length > 0){
+		var xx = obstacles.pop();
 	}
 }
 
@@ -585,6 +592,59 @@ function obstacleCollision(nx, ny){
 		}
 	}
 	return collision;
+}
+
+function crearObstacles(){
+	
+	var mq = (width/3);
+	var posX = [(mq/2),(mq+(mq/2)),((2*mq)+(mq/2))];
+
+	var n = (height - (radius * 4)) / 10;
+	var posActual = height - (radius * 8);
+	
+	while(posActual > (radius * 4)){
+		var mida = Math.floor((Math.random() * 3) + 1);
+		var pos = Math.floor(Math.random() * 3);
+				
+		if((posActual - (midaY/2)) <= (radius * 8)){
+			mida = 3;
+		}
+		var midaX = mq/mida;
+		var midaY = n/mida;
+				
+		var obj = {
+			pos: {
+				x: (posX[pos] - (midaX/2)),
+				y: (posActual - (midaY/2))
+			},
+			x: midaX,
+			y: midaY
+		};
+		
+		obstacles.push(obj);
+		console.log(posX.length);
+		if(((pos == 0) || (pos == 2)) && (mida == 3)){
+			if(pos == 0){
+				pos = 2;
+			}
+			else{ //pos == 2
+				pos = 1;
+			}
+			
+			obj = {
+				pos: {
+					x: (posX[pos] - (midaX/2)),
+					y: (posActual - (midaY/2))
+				},
+				x: midaX,
+				y: midaY
+			};
+			
+			obstacles.push(obj);
+		}
+		
+		posActual -= n;			
+	}
 }
 
 setInterval(moveloop,1000/60);
