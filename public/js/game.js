@@ -72,7 +72,7 @@ Game.prototype.handleNetwork = function(socket) {
 
 	socket.on('finalCursa', function(idGuanyador){
 		partidaAcabada = true;
-		if(idGuanyador == 0){
+		if(idGuanyador === 0){
 			waitingNextGame = true;
 		}
 		else if(idGuanyador == player.team){
@@ -96,6 +96,7 @@ Game.prototype.handleNetwork = function(socket) {
 	});
 
 	socket.on('restartGame', function(){
+		countdown = 10;
 		waitingNextGame = false;
 		partidaAcabada = false;
 	});
