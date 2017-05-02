@@ -237,7 +237,7 @@ io.on('connection', function(socket){
 		}
 		
 		if(!hiHaSuficientsJugadors()){
-			finalCursa(0,true);
+			finalCursa(0);
 		}
 			
 		
@@ -579,22 +579,19 @@ function moveTeam(team){
 		}
 	
 		if(team.y < (radius*2)){
-			finalCursa(team.id,false);
+			finalCursa(team.id);
 		}
 	
 }
 
 
-function finalCursa(idGuanyador,faltaJugadors){
+function finalCursa(idGuanyador){
 	enjoc = false;
 	partidaAcabada = true;
 
-	if(!faltaJugadors){
-		users.forEach(function(u){
-			sockets[u.id].emit('finalCursa', idGuanyador);
-		});
-	}
-	
+	users.forEach(function(u){
+		sockets[u.id].emit('finalCursa', idGuanyador);
+	});
 }
 
 function obstacleCollision(nx, ny){
