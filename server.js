@@ -236,9 +236,10 @@ io.on('connection', function(socket){
 			}
 		}
 		
-		if(users.length == 0){
-			finalCursa(0);
+		if(!hiHaSuficientsJugadors()){
+			finalCursa(0,true);
 		}
+			
 		
         console.log('[INFO] User ' + currentPlayer.name + ' disconnected!');
 
@@ -578,20 +579,21 @@ function moveTeam(team){
 		}
 	
 		if(team.y < (radius*2)){
-			finalCursa(team.id);
+			finalCursa(team.id,false);
 		}
 	
 }
 
 
-function finalCursa(idGuanyador){
+function finalCursa(idGuanyador,faltaJugadors){
 	enjoc = false;
 	partidaAcabada = true;
-	
-	users.forEach(function(u){
-		sockets[u.id].emit('finalCursa', idGuanyador);
-	});
-	
+
+	if(!faltaJugadors){
+		users.forEach(function(u){
+			sockets[u.id].emit('finalCursa', idGuanyador);
+		});
+	}
 	
 }
 
