@@ -8,7 +8,7 @@ var util = require('./lib/util');
 var users=[];
 var sockets = {};
 
-var nTeams = 2;
+var nTeams = 1;
 var tempsIniciPartida = 1;
 var tempsFinalPartida = 10;
 var width=1300;
@@ -213,12 +213,7 @@ io.on('connection', function(socket){
 			}*/
 		    	
 		    	
-			crearObstacles();	
-				
-			socket.emit('gameSetup', {
-				gameWidth: width,
-				gameHeight: height
-			},obstacles);
+			regenerarObstacles();
 
 			console.log('Total players: ' + users.length);
 		}
@@ -389,6 +384,10 @@ function restaurarPartida(){
 		assignarEquip(player);
 	}
 	
+	regenerarObstacles();
+}
+
+function regenerarObstacles(){
 	while(obstacles.length > 0){
 		var xx = obstacles.pop();
 	}
@@ -402,6 +401,7 @@ function restaurarPartida(){
 		},obstacles);
 	});
 }
+
 
 /*function movePlayer(player){
 	
