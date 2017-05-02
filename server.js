@@ -8,8 +8,8 @@ var util = require('./lib/util');
 var users=[];
 var sockets = {};
 
-var nTeams = 1;
-var tempsIniciPartida = 10;
+var nTeams = 2;
+var tempsIniciPartida = 1;
 var tempsFinalPartida = 10;
 var width=1300;
 var height=7000;
@@ -249,9 +249,11 @@ io.on('connection', function(socket){
 	// Heartbeat function, update everytime.
 	socket.on('0', function(target) {
 		currentPlayer.lastHeartbeat = new Date().getTime();
-		if (target.x !== currentPlayer.x || target.y !== currentPlayer.y) {
-			currentPlayer.target = target;
-			//console.log(currentPlayer.x + ', ' + currentPlayer.y);
+		
+		var targetNormalitzada = normalitzarTarget(target,currentPlayer.x,currentPlayer.y);
+		
+		if (targetNormalitzada.x !== currentPlayer.target.x || targetNormalitzada.y !== currentPlayer.target.y) {
+			currentPlayer.target = targetNormalitzada;
 		}
 	});
 });
@@ -625,7 +627,7 @@ function crearObstacles(){
 			mida = 3;
 		}
 
-		var midaX = mq/mida;
+		var midaX = (mq-radius)/mida;
 		var midaY = n/mida;
 				
 		var obj = {
@@ -663,6 +665,21 @@ function crearObstacles(){
 		
 		posActual -= n;			
 	}
+}
+
+function normalitzarTarget(target,posX,posY){
+	var targetNormalitzada = {
+		x: target.x,
+		y: target.y
+	}
+	
+	var norma = Math.sqrt(Math.pow(Math.abs(target.x - posX), 2) + Math.pow(Math.abs(target.y - posY), 2));
+	
+	targetNormalitzada.x = target.x / norma;
+	targetNormalitzada.y = target.y / norma;
+	
+	
+	return targetNormalitzada;
 }
 
 setInterval(moveloop,1000/60);
