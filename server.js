@@ -11,8 +11,8 @@ var sockets = {};
 var nTeams = 1;
 var tempsIniciPartida = 10;
 var tempsFinalPartida = 10;
-var width=1500;
-var height=5000;
+var width=1300;
+var height=7000;
 var radius=50;
 var velocitat=5;
 
@@ -392,6 +392,13 @@ function restaurarPartida(){
 	}
 	
 	crearObstacles();
+	
+	users.forEach(function(u){
+		sockets[u.id].emit('gameSetup', {
+			gameWidth: width,
+			gameHeight: height
+		},obstacles);
+	});
 }
 
 /*function movePlayer(player){
@@ -601,7 +608,7 @@ function crearObstacles(){
 	var mq = (width/3);
 	var posX = [(mq/2),(mq+(mq/2)),((2*mq)+(mq/2))];
 
-	var n = (height - (radius * 4)) / 10;
+	var n = (height - (radius * 4)) / 14;
 	var posActual = height - (radius * 15);
 	
 	var ultimaMida = 0;
