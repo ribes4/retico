@@ -8,7 +8,7 @@ var util = require('./lib/util');
 var users=[];
 var sockets = {};
 
-var nTeams = 1;
+var nTeams = 2;
 var tempsIniciPartida = 10
 var tempsFinalPartida = 10;
 var width=1300;
@@ -234,6 +234,10 @@ io.on('connection', function(socket){
 			if (util.findIndex(Equips[i].players, currentPlayer.id) > -1){
 				Equips[i].players.splice(util.findIndex(Equips[i].players, currentPlayer.id), 1);
 			}
+		}
+		
+		if(users.length == 0){
+			finalCursa(0);
 		}
 		
         console.log('[INFO] User ' + currentPlayer.name + ' disconnected!');
