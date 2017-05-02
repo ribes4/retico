@@ -72,7 +72,10 @@ Game.prototype.handleNetwork = function(socket) {
 
 	socket.on('finalCursa', function(idGuanyador){
 		partidaAcabada = true;
-		if(idGuanyador == player.team){
+		if(idGuanyador == 0){
+			waitingNextGame = true;
+		}
+		else if(idGuanyador == player.team){
 			winner = true;
 		}
 		else
@@ -172,13 +175,13 @@ Game.prototype.handleGraphics = function() {
 	    graph.font = 'bold 50px Verdana';
 	    graph.textAlign = 'center';
 	    graph.lineWidth = 2;
-            if(winner){
-            	graph.fillText('Your team wins!', screenWidth / 2, screenHeight / 2);
-		graph.strokeText('Your team wins!', screenWidth / 2, screenHeight / 2);	
-            }
-            else if(waitingNextGame){
+	    if(waitingNextGame){
 		graph.fillText('Waiting for the next game', screenWidth / 2, screenHeight / 2);
 		graph.strokeText('Waiting for the next game', screenWidth / 2, screenHeight / 2);
+            }
+            else if(winner){
+            	graph.fillText('Your team wins!', screenWidth / 2, screenHeight / 2);
+		graph.strokeText('Your team wins!', screenWidth / 2, screenHeight / 2);	
             }
             else{
             	graph.fillText('Your team loses...', screenWidth / 2, screenHeight / 2);
