@@ -69,6 +69,7 @@ for(var i=0;i<nTeams;i++){
 	};
 	Equips.push(e);
 }
+regenerarObstacles();
 
 app.set('port', process.env.PORT || 3000);
 
@@ -213,7 +214,12 @@ io.on('connection', function(socket){
 			}*/
 		    	
 		    	
-			regenerarObstacles();
+			users.forEach(function(u){
+				sockets[u.id].emit('gameSetup', {
+					gameWidth: width,
+					gameHeight: height
+				},obstacles);
+			});
 
 			console.log('Total players: ' + users.length);
 		}
@@ -390,6 +396,12 @@ function restaurarPartida(){
 	}
 	
 	regenerarObstacles();
+	users.forEach(function(u){
+		sockets[u.id].emit('gameSetup', {
+			gameWidth: width,
+			gameHeight: height
+		},obstacles);
+	});
 }
 
 function regenerarObstacles(){
@@ -399,12 +411,6 @@ function regenerarObstacles(){
 	
 	crearObstacles();
 	
-	users.forEach(function(u){
-		sockets[u.id].emit('gameSetup', {
-			gameWidth: width,
-			gameHeight: height
-		},obstacles);
-	});
 }
 
 
