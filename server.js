@@ -9,7 +9,7 @@ var users=[];
 var sockets = {};
 
 var nTeams = 2;
-var tempsIniciPartida = 10
+var tempsIniciPartida = 30;
 var tempsFinalPartida = 10;
 var width=1300;
 var height=7000;
