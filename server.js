@@ -9,7 +9,7 @@ var users=[];
 var sockets = {};
 
 var nTeams = 2;
-var tempsIniciPartida = 30;
+var tempsIniciPartida = 10;
 var tempsFinalPartida = 10;
 var width=1300;
 var height=7000;
@@ -214,14 +214,10 @@ io.on('connection', function(socket){
 			}*/
 		    	
 		    	
-			users.forEach(function(u){
-				sockets[u.id].emit('gameSetup', {
-					gameWidth: width,
-					gameHeight: height
-				},obstacles);
-			});
-
-			console.log('Total players: ' + users.length);
+			sockets[currentPlayer.id].emit('gameSetup', {
+				gameWidth: width,
+				gameHeight: height
+			},obstacles);
 		}
 	});
 	
@@ -295,7 +291,9 @@ function mostrar(){
 
 function sendUpdate(){
 	users.forEach(function(u){
-		sockets[u.id].emit('serverTellTeamMove', Equips);
+		if(u.jugant){
+			sockets[u.id].emit('serverTellTeamMove', Equips);
+		}
 	});
 }
 
