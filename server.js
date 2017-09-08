@@ -28,33 +28,6 @@ var Equips=[];
 var llistaEspera=[];
 var obstacles=[];
 
-/*var obstacle1 = {
-	pos: {
-		x: 0,
-		y: 4000
-	},
-	x: 300,
-	y: 50
-}
-var obstacle2 = {
-	pos: {
-		x: 1000,
-		y: 3000
-	},
-	x: 900,
-	y: 100
-}
-var obstacle3 = {
-	pos: {
-		x: 500,
-		y: 100
-	},
-	x: 100,
-	y: 100
-}
-obstacles.push(obstacle1);
-obstacles.push(obstacle2);
-obstacles.push(obstacle3);*/
 
 for(var i=0;i<nTeams;i++){
 	var mq = (width/nTeams);
@@ -108,46 +81,6 @@ io.on('connection', function(socket){
 		console.log('[INFO] User ' + currentPlayer.name + ' respawned!');
 	});
 
-	/*socket.on('nickname', function(nickname){
-		
-		var player = [id,nickname];
-		socket.emit('welcome',id);
-		id++;
-		
-		if(teamA.length > teamB.length){
-			teamB.push(player);
-			mostrar();
-		}
-		else if(teamB.length > teamA.length){
-			teamA.push(player);
-			mostrar();
-		}
-		else{
-			var rnd = Math.floor((Math.random() * 2) + 1);
-			if(rnd == 1){
-				teamA.push(player);
-				mostrar();
-			}
-			else{
-				teamB.push(player);
-				mostrar();
-			}
-		}
-	});*//*
-	socket.on("init_pose", function(data){
-		poses.push(data);
-		io.emit("pose",poses);
-	});*/
-	
-	/*socket.on("moure", function(data){
-		for( i=0;i< poses.length;i++){
-			if(poses[i].id==data.id){
-				poses[i].jugadorPrincipal = "<div id="+data.id+" class='player' type= 'player' name='player' style =' background-color:#f220e6;position:absolute;left:"+data.style.left+"; top:"+data.style.top+"'>"+data.id+"</div>"				
-			}
-		}
-		io.emit("movent",data);
-	});*/
-
 
 	socket.on('gotit', function(player){
 		console.log('[INFO] Player ' + player.name + ' connecting!');
@@ -177,42 +110,7 @@ io.on('connection', function(socket){
 				currentPlayer.jugant = true;
 				assignarEquip(currentPlayer);
 			}
-			
-			/*var equip=0;
-			for(var i=0;i<Equips.length;i++){
-				if(Equips[equip].players.length > Equips[i].players.length){
-				if(Equips[equip].players.length > Equips[i].players.length){
-					equip = i;
-				}
-			}
-			
-			currentPlayer.team = Equips[equip].id;
-			Equips[equip].players.push(currentPlayer);
-			
-			mostrar();
-			
-			sockets[player.id].emit('setTeam',currentPlayer.team);*/
-			
-			/*if(teamA.length > teamB.length){
-				teamB.push(currentPlayer);
-				mostrar();
-			}
-			else if(teamB.length > teamA.length){
-				teamA.push(currentPlayer);
-				mostrar();
-			}
-			else{
-				var rnd = Math.floor((Math.random() * 2) + 1);
-				if(rnd == 1){
-					teamA.push(currentPlayer);
-					mostrar();
-				}
-				else{
-					teamB.push(currentPlayer);
-					mostrar();
-				}
-			}*/
-		    	
+			    	
 		    	
 			users.forEach(function(u){
 				sockets[u.id].emit('gameSetup', {
@@ -412,82 +310,6 @@ function regenerarObstacles(){
 	crearObstacles();
 	
 }
-
-
-/*function movePlayer(player){
-	
-	/*var target = {
-		x: player.x + player.target.x,
-		y: player.y + player.target.y
-	};*/
-	//var dist = Math.sqrt(Math.pow(target.y,2) + Math.pow(target.x,2));
-	
-	/*if(equip(player)=='A'){
-		var deg = Math.atan2(movimentA.y,movimentA.x);
-	}
-	else{ //equip='B'
-		var deg = Math.atan2(movimentB.y,movimentB.x);
-	}
-
-	//var deg = Math.atan2(player.target.y,player.target.x);
-	
-	var nx, ny;
-	nx = (Math.cos(deg)*velocitat) + player.x;
-	ny = (Math.sin(deg)*velocitat) + player.y;
-	
-	if(nx > radius){
-		if(nx < (width-radius)){
-			player.x = nx;
-		}
-		else{
-			player.x = width-radius;
-		}
-	}
-	else{
-		player.x = radius;
-	}
-	
-	
-	if(ny > radius){
-		if(ny < (height-radius)){
-			player.y = ny;
-		}
-		else{
-			player.y = height-radius;
-		}
-	}
-	else{
-		player.y = radius;
-	}
-}*/
-
-/*function equip(player){
-	var equip='';
-	var continuar = true;
-	var pos = 0;
-	while(continuar){
-		var jugadorA = teamA[pos];
-		if(player.id.localeCompare(jugadorA.id)==0){ //Jugador trobat a la Taula de l'equip A
-			equip = 'A';
-		}
-		else{
-			pos++;
-		}
-	}
-	
-	pos = 0;
-	while(continuar){
-		var jugadorB = teamB[pos];
-		if(player.id.localeCompare(jugadorB.id)==0){ //Jugador trobat a la Taula de l'equip B
-			equip = 'B';
-		}
-		else{
-			pos++;
-		}
-	}
-
-	return equip;
-}*/
 
 function moveTeam(team){
 

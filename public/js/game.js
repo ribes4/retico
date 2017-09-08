@@ -265,34 +265,6 @@ function drawObstacles(){
 	graph.strokeStyle = playerConfig.borderColor;
 
 	for(var i=0;i<obstacles.length;i++){
-		/*
-		//linia esquerra
-		graph.beginPath();
-		graph.moveTo(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2- player.y);
-		graph.lineTo(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y + obstacles[i].y +screenHeight/2- player.y);
-		graph.strokeStyle = lineColor;
-		graph.stroke();
-		
-		//linia inferior
-		graph.beginPath();
-		graph.moveTo(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y + obstacles[i].y +screenHeight/2- player.y);+
-		graph.lineTo(obstacles[i].pos.x + obstacles[i].x +screenWidth/2 - player.x, obstacles[i].pos.y + obstacles[i].y +screenHeight/2- player.y);
-		graph.strokeStyle = lineColor;
-		graph.stroke();
-
-		//linia dreta
-		graph.beginPath();
-		graph.moveTo(obstacles[i].pos.x + obstacles[i].x +screenWidth/2 - player.x, obstacles[i].pos.y + obstacles[i].y +screenHeight/2- player.y);
-		graph.lineTo(obstacles[i].pos.x + obstacles[i].x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2- player.y);
-		graph.strokeStyle = lineColor;
-		graph.stroke();
-
-		//linia superior
-		graph.beginPath();
-		graph.moveTo(obstacles[i].pos.x + obstacles[i].x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2- player.y);
-		graph.lineTo(obstacles[i].pos.x +screenWidth/2 - player.x, obstacles[i].pos.y +screenHeight/2 - player.y );
-		graph.strokeStyle = lineColor;
-		graph.stroke();*/
 	    
 	    graph.fillStyle = '#422910';
 	    graph.strokeStyle = '#000000';
@@ -342,11 +314,7 @@ function drawTeams() {
 			    y = valueInRange(-teamCurrent.y + screenHeight / 2,
 		 		 gameHeight - teamCurrent.y + screenHeight / 2, y);
 		}
-	  	    /*x = valueInRange(-cellCurrent.x - player.x + screenWidth / 2 + (radius/3),
-				                 gameWidth - cellCurrent.x + gameWidth - player.x + screenWidth / 2 - (radius/3), x);
-		    y = valueInRange(-cellCurrent.y - player.y + screenHeight / 2 + (radius/3),
-				                 gameHeight - cellCurrent.y + gameHeight - player.y + screenHeight / 2 - (radius/3) , y);
-*/
+
 		    spin += increase;
 		    xstore[i] = x;
 		    ystore[i] = y;
