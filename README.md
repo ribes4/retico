@@ -3,6 +3,8 @@ Retico: Real Time Collaborative Game
 
 # README #
 
+You can [play](http://retico.azurewebsites.net) the game [here](http://retico.azurewebsites.net)
+
 This project is based on [this template](https://github.com/huytd/node-online-game-template)
 
 ### Installation ###
