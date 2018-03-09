@@ -1,5 +1,6 @@
 Retico: Real Time Collaborative Game
 =============
+[![Build Status](https://travis-ci.org/ribes4/retico.svg?branch=master)](https://travis-ci.org/ribes4/retico)
 
 # README #
 
