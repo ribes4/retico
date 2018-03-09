@@ -4,7 +4,7 @@
   "description": "retico game",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jshint server.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "homepage": "https://bitbucket.org/aitorpalomares/retico#readme",
   "dependencies": {
     "express": "^4.14.1"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.5"
   }
 }

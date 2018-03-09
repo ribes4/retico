@@ -212,7 +212,7 @@ function moveloop(){
 				esperaFinal = true;
 			}
 			else{
-				var tactual = new Date().getTime();
+				tactual = new Date().getTime();
 				var timeFinal = tempsFinalPartida - ((tactual - momentActualFinal)/1000);
 				
 				if(timeFinal < 0){
@@ -242,7 +242,7 @@ function moveloop(){
 					compteEnrere = true;
 				}
 				else{
-					var tactual = new Date().getTime();
+					tactual = new Date().getTime();
 					var timeToStart = tempsIniciPartida - ((tactual - momentActualInici)/1000);
 					if(timeToStart < 0){
 						compteEnrere = false;
@@ -340,7 +340,7 @@ function moveTeam(team){
 
 		if(nx > radius){
 			if(nx < (width-radius)){
-				var coli = obstacleCollision(nx,ny);
+				coli = obstacleCollision(nx,ny);
 				if (!coli.bool){
 
 					team.x = nx;
@@ -361,15 +361,13 @@ function moveTeam(team){
 	
 		if(ny > radius){
 			if(ny < (height-radius)){
-				var coli = obstacleCollision(nx,ny);
+				coli = obstacleCollision(nx,ny);
 				if (!coli.bool){
 					team.y = ny;
 				}
 				else{
 					var pose = coli.pose;
-					if(collision
-					   && ((nx < obstacles[pose].pos.x && (ny <obstacles[pose].pos.y || ny >  (obstacles[pose].pos.y + obstacles[pose].y))) 
-					   	|| (nx > (obstacles[pose].pos.x + obstacles[pose].x) && (ny < obstacles[pose].pos.y || ny > (obstacles[pose].pos.y + obstacles[pose].y))))){
+					if(collision && ((nx < obstacles[pose].pos.x && (ny <obstacles[pose].pos.y || ny >  (obstacles[pose].pos.y + obstacles[pose].y))) || (nx > (obstacles[pose].pos.x + obstacles[pose].x) && (ny < obstacles[pose].pos.y || ny > (obstacles[pose].pos.y + obstacles[pose].y))))){
 					   	if(team.x+radius < obstacles[pose].pos.x){
 					   		team.y = ny;
 					   	}
@@ -424,7 +422,7 @@ function obstacleCollision(nx, ny){
 	var collision = {
 		bool: false,
 		pose: 0
-	}
+	};
 	for(var i =0; i< obstacles.length; i++){
 		if( nx+radius > obstacles[i].pos.x && nx-radius < (obstacles[i].pos.x + obstacles[i].x) && ny+radius > obstacles[i].pos.y && ny-radius < (obstacles[i].pos.y + obstacles[i].y)){
 			collision.bool = true;
@@ -500,7 +498,7 @@ function normalitzarTarget(target,posX,posY){
 	var targetNormalitzada = {
 		x: target.x,
 		y: target.y
-	}
+	};
 	
 	var norma = Math.sqrt(Math.pow(Math.abs(target.x - posX), 2) + Math.pow(Math.abs(target.y - posY), 2));
 	
