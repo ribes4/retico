@@ -4,8 +4,6 @@ Retico: Real Time Collaborative Game
 
 # README #
 
-You can [play](http://retico.azurewebsites.net) the game [here](http://retico.azurewebsites.net).
-
 ![Image](screenshot.png)
 
 This project is based on [this template](https://github.com/huytd/node-online-game-template).
@@ -32,6 +30,20 @@ After downloading all the dependencies, you can run the server with the followin
 npm start
 ```
 The game will then be accessible at `http://localhost:3000` or the respective server installed on. The default port is `3000`.
+
+### Deploying to Render ###
+
+1. Push this repository to GitHub.
+2. Go to [render.com](https://render.com) and create a new **Web Service**.
+3. Connect your GitHub repository.
+4. Use these settings:
+   - **Runtime:** Node
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+5. Click **Create Web Service**. Render will deploy it automatically.
+
+> **Note:** Render's free tier spins down after inactivity. The first request after sleep may take a few seconds.
+
 ### License ###
 
 * This project is licensed under the terms of the **MIT** license.
