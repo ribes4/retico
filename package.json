@@ -15,8 +15,8 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/aitorpalomares/retico#readme",
   "dependencies": {
-    "express": "^4.14.1",
-    "socket.io": "^1.7.2"
+    "express": "^4.22.2",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "jshint": "^2.9.5"
