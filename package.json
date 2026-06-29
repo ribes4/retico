@@ -4,6 +4,7 @@
   "description": "retico game",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "jshint server.js"
   },
   "repository": {
@@ -14,7 +15,8 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/aitorpalomares/retico#readme",
   "dependencies": {
-    "express": "^4.14.1"
+    "express": "^4.14.1",
+    "socket.io": "^1.7.2"
   },
   "devDependencies": {
     "jshint": "^2.9.5"
